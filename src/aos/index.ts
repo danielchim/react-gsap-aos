@@ -1,5 +1,5 @@
-import useAOSInitial from "./hooks/useAOSInitial";
-import toAOSProps from "./utils/toAOSProps";
+export { default as useAOSInitial } from "./hooks/useAOSInitial";
+export { default as toAOSProps } from "./utils/toAOSProps";
 
 export type {
   ScrollAnimationOptions,
@@ -11,5 +11,3 @@ export type {
   AnchorPlacement,
   Easing,
 } from "./types";
-
-export { useAOSInitial, toAOSProps };

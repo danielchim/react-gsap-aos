@@ -21,8 +21,10 @@ export function scale(x: number, y?: number) {
       } satisfies gsap.TweenVars);
 }
 
+/**
+ * @see https://gsap.com/docs/v3/GSAP/CorePlugins/CSS/#3d-transforms
+ */
 export function perspective(value: number) {
-  // https://gsap.com/docs/v3/GSAP/CorePlugins/CSS/#3d-transforms
   return {
     transformPerspective: value,
   } satisfies gsap.TweenVars;

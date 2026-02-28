@@ -1,11 +1,10 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { createAnimation } from "../createAOSAnimation";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
+gsap.registerPlugin(useGSAP);
 
 const AOS_PROPS_KEYS = [
   "data-aos",
@@ -18,6 +17,27 @@ const AOS_PROPS_KEYS = [
   "data-aos-anchor-placement",
 ];
 
+/**
+ * 初始化 AOS 動畫
+ * 
+ * @example
+ * ```tsx
+  "use client";
+
+  import {useAOSInitial} from '@/aos';
+ 
+  export default function Demo() {
+    const {containerRef} = useAOSInitial<HTMLDivElement>()
+    return (
+      <div ref={containerRef} className="overflow-hidden">
+        <div data-aos-container>
+          <div data-aos="fade-up">...</div>
+        </div>
+      </div>
+    )
+  }
+ * ```
+ */
 export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
   const containerRef = useRef<E | null>(null);
   const observerRef = useRef<MutationObserver | null>(null);
