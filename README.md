@@ -44,11 +44,15 @@ export default function Demo() {
   const { containerRef } = useAOSInitial<HTMLDivElement>();
   return (
     <div ref={containerRef} className="overflow-hidden">
-      {/* 別忘記動畫元素要多一個標記 data-aos-container 的容器 */}
+      // ✅ 使用標記 data-aos-container 的容器
       <div data-aos-container>
         <div data-aos="fade-up" data-aos-offset="200">
           Hello AOS
         </div>
+      </div>
+      // ❌ 外層沒有使用 data-aos-container 的容器
+      <div data-aos="fade-up" data-aos-offset="200">
+        Hello AOS
       </div>
     </div>
   );
@@ -76,6 +80,7 @@ export default function Demo() {
 
 ```tsx
 "use client";
+
 import { toAOSProps } from "@/aos";
 
 export default function Demo() {
@@ -124,12 +129,20 @@ const [animation, setAnimation] = useState("fade-up");
 
 > 這是因為 react-gsap-aos 只監聽節點變化來卸載或加載動畫，必須重新創建節點才能生效。
 
-### 注意事項
+### 佈局變化
 
-- 每個頁面單獨綁定 `useAOSInitial`，避免全局污染。
-- 動態切換動畫需使用 `key`。
-- `data-aos-container` 用於穩固 Y 軸相關動畫的基準點，強烈建議總是使用該方案。
-- 請確保在客戶端環境使用 `use client`。
+當頁面佈局改變時（例如元素位置改變、視窗尺寸調整），動畫元素可能還停留在舊的位置。  
+GSAP 預設會在視窗尺寸變化時自動更新動畫位置，詳細說明可參考 [GSAP ScrollTrigger refresh()](<https://gsap.com/docs/v3/Plugins/ScrollTrigger/static.refresh()>)。
+
+如果你使用 JavaScript 或其他操作動態改變了 DOM，這些變動 **不會自動觸發刷新**，需要手動調用刷新函式：
+
+```tsx
+import { refreshAOS } from "@/aos";
+
+refreshAOS();
+```
+
+`refreshAOS()` 內部封裝了 `ScrollTrigger.refresh(true)`，在大部分情況下可以安全刷新動畫位置。
 
 ## API
 
