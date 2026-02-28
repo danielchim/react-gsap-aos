@@ -1,26 +1,26 @@
 import { useState } from "react";
 
-import { type AOSAnimation } from "@/aos";
-import { animations } from "@/aos/constants";
+import { type Easing } from "@/aos";
+import { easings } from "@/aos/constants";
 
-interface AnimationFilterProps {
-  value?: AOSAnimation;
-  onChangeValue?: (next: AOSAnimation) => void;
+interface EasingFilterProps {
+  value?: Easing;
+  onChangeValue?: (next: Easing) => void;
 }
 
 const categories = Array.from(
-  new Set(animations.map((item) => item.split("-")[0])),
+  new Set(easings.map((item) => item.split(".")[0])),
 );
 
-export default function AnimationFilter({
+export default function EasingFilter({
   value,
   onChangeValue,
-}: AnimationFilterProps) {
+}: EasingFilterProps) {
   const [category, setCategory] = useState(categories[0]);
 
   return (
     <fieldset className="fieldset">
-      <legend className="fieldset-legend">動畫篩選</legend>
+      <legend className="fieldset-legend">動畫曲線篩選</legend>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <select
           className="select"
@@ -29,8 +29,7 @@ export default function AnimationFilter({
             const nextValue = event.currentTarget.value;
             setCategory(nextValue);
             onChangeValue?.(
-              animations.find((item) => item.startsWith(nextValue)) ||
-                animations[0],
+              easings.find((item) => item.startsWith(nextValue)) || easings[0],
             );
           }}
         >
@@ -42,12 +41,13 @@ export default function AnimationFilter({
         </select>
         <select
           className="select"
+          disabled={value === "none"}
           value={value}
           onChange={(event) => {
-            onChangeValue?.(event.currentTarget.value as AOSAnimation);
+            onChangeValue?.(event.currentTarget.value as Easing);
           }}
         >
-          {animations
+          {easings
             .filter((item) => item.startsWith(category))
             .map((item) => (
               <option key={item} value={item}>

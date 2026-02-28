@@ -2,11 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-import { useAOSInitial } from "@/aos";
-import { animations } from "@/aos/constants";
+import { toAOSProps, useAOSInitial } from "@/aos";
+import { animations, easings } from "@/aos/constants";
 import cn from "@/utils/cn";
 
-import AnimationFilter from "./AnimationFilter";
+import FilterPanel from "./FilterPanel";
 
 interface Tab {
   value: string;
@@ -51,6 +51,7 @@ export default function Demo() {
         </div>
       </div>
       {renderPanel(tabIndex)}
+      <OffsetMark />
       <FAB />
     </div>
   );
@@ -67,6 +68,14 @@ function renderPanel(index: number) {
   }
 }
 
+function OffsetMark() {
+  return (
+    <div className="bg-primary fixed left-0 h-px" style={{ bottom: 120 }}>
+      <span className="text-primary font-semibold">動畫觸發點</span>
+    </div>
+  );
+}
+
 function FAB() {
   return (
     <button
@@ -81,52 +90,51 @@ function FAB() {
   );
 }
 
-function FilterPanel({ children }: React.PropsWithChildren) {
-  return (
-    <div>
-      <div className="card card-sm bg-base-100 card-border">
-        <div className="card-body">{children}</div>
-      </div>
-    </div>
-  );
-}
-
 function AllAnimation() {
+  const [easing, setEasing] = useState(easings[0]);
+
   return (
-    <ul className="flex flex-col gap-4 overflow-hidden">
-      {animations.map((item, index) => (
-        <li key={item} data-aos-container>
-          <div
-            data-aos={item}
-            className={cn(
-              "flex h-60 items-center justify-center rounded-lg",
-              bgColors[index],
-            )}
-          >
-            <span className="text-2xl font-semibold text-white">
-              {item.replace(/\-/g, " ")}
-            </span>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <>
+      <FilterPanel filter={["easing"]} easing={easing} setEasing={setEasing} />
+      <ul className="flex flex-col gap-4 overflow-hidden">
+        {animations.map((item, index) => (
+          <li key={item} data-aos-container>
+            <div
+              {...toAOSProps({ animation: item, easing })}
+              className={cn(
+                "flex h-60 items-center justify-center rounded-lg",
+                bgColors[index],
+              )}
+            >
+              <span className="text-2xl font-semibold text-white">
+                {item.replace(/\-/g, " ")}
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 
 function SingleAnimation() {
   const list = useMemo(() => Array(20).fill(null), []);
   const [animation, setAnimation] = useState(animations[0]);
+  const [easing, setEasing] = useState(easings[0]);
 
   return (
     <>
-      <FilterPanel>
-        <AnimationFilter value={animation} onChangeValue={setAnimation} />
-      </FilterPanel>
+      <FilterPanel
+        animation={animation}
+        setAnimation={setAnimation}
+        easing={easing}
+        setEasing={setEasing}
+      />
       <ul className="flex flex-col gap-4 overflow-hidden">
         {list.map((_, index) => (
-          <li key={index} data-aos-container>
+          <li key={[animation, easing, index].join("-")} data-aos-container>
             <div
-              data-aos={animation}
+              {...toAOSProps({ animation, easing })}
               className={cn(
                 "flex h-60 items-center justify-center rounded-lg",
                 bgColors[index],
