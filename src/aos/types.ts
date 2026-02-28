@@ -6,13 +6,13 @@ export interface ScrollAnimationOptions {
    */
   offset: number;
   /**
-   * 延遲時間 (ms)
+   * 動畫延遲時間 (ms)
    *
    * @default 0
    */
   delay: number;
   /**
-   * 持續時間 (ms)
+   * 動畫持續時間 (ms)
    *
    * @default 400
    */
@@ -30,13 +30,13 @@ export interface ScrollAnimationOptions {
    */
   once: boolean;
   /**
-   * 是否啟用動畫退場
+   * 滾動過元素後，動畫是否反向播放
    *
    * @default false
    */
   mirror: boolean;
   /**
-   * 動畫在視窗的觸發位置
+   * 元素在視窗的指定位置觸發動畫
    *
    * [GSAP 文件](https://gsap.com/docs/v3/Eases)
    *

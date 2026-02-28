@@ -135,16 +135,16 @@ const [animation, setAnimation] = useState("fade-up");
 
 ### 屬性選項
 
-| 名稱            | 型別                       | 對應 `data-aos`             | 預設值         | 說明                    |
-| --------------- | -------------------------- | --------------------------- | -------------- | ----------------------- |
-| animation       | [`AOSAnimation`](#動畫)    | `data-aos`                  | `undefined`    | 動畫類型                |
-| offset          | `number`                   | `data-aos-offset`           | `120`          | 提前觸發動畫的距離 (px) |
-| delay           | `number`                   | `data-aos-delay`            | `0`            | 延遲時間 (ms)           |
-| duration        | `number`                   | `data-aos-duration`         | `400`          | 持續時間 (ms)           |
-| easing          | [`Easing`](#緩動曲線)      | `data-aos-easing`           | `"none"`       | 緩動曲線                |
-| once            | `boolean`                  | `data-aos-once`             | `false`        | 是否只執行一次          |
-| mirror          | `boolean`                  | `data-aos-mirror`           | `false`        | 是否啟用動畫退場        |
-| anchorPlacement | [`AnchorPlacement`](#錨點) | `data-aos-anchor-placement` | `"top-bottom"` | 動畫在視窗的觸發位置    |
+| 名稱            | 型別                       | 對應 `data-aos`             | 預設值         | 說明                           |
+| --------------- | -------------------------- | --------------------------- | -------------- | ------------------------------ |
+| animation       | [`AOSAnimation`](#動畫)    | `data-aos`                  | `undefined`    | 動畫類型                       |
+| offset          | `number`                   | `data-aos-offset`           | `120`          | 提前觸發動畫的距離 (px)        |
+| delay           | `number`                   | `data-aos-delay`            | `0`            | 動畫延遲時間 (ms)              |
+| duration        | `number`                   | `data-aos-duration`         | `400`          | 動畫持續時間 (ms)              |
+| easing          | [`Easing`](#緩動曲線)      | `data-aos-easing`           | `"none"`       | 緩動曲線                       |
+| once            | `boolean`                  | `data-aos-once`             | `false`        | 是否只執行一次                 |
+| mirror          | `boolean`                  | `data-aos-mirror`           | `false`        | 滾動過元素後，動畫是否反向播放 |
+| anchorPlacement | [`AnchorPlacement`](#錨點) | `data-aos-anchor-placement` | `"top-bottom"` | 元素在視窗的指定位置觸發動畫   |
 
 ### 動畫
 

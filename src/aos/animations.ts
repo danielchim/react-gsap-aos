@@ -114,7 +114,7 @@ function createScrollTriggerTween(
         // markers: true,
         trigger: container || element,
         toggleActions: mirror
-          ? "play play reverse none"
+          ? "play reverse play reverse"
           : "play none none reverse",
         once,
         start: scrollTriggerStart(anchorPlacement, offset),
