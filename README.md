@@ -6,12 +6,20 @@
 
 ## 安裝依賴
 
+> 該專案目前還沒上架到 npm
+
 ```bash
 pnpm install gsap @gsap/react
 ```
 
 - [GSAP 官方文件](https://gsap.com/docs/v3/Installation)
 - [GSAP React 指南](https://gsap.com/resources/React)
+
+## 執行範例專案
+
+```bash
+pnpm dev
+```
 
 ## 核心概念
 
