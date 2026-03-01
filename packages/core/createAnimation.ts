@@ -1,4 +1,4 @@
-import type { AOSAnimation } from "./types";
+import type { Animation } from "./types";
 
 import animations, { type AnimationFunction } from "./animations";
 import {
@@ -9,7 +9,7 @@ import {
   type AOSDataAttributeKeys,
 } from "./constants";
 
-const ANIMATION_REGISTRY: Record<AOSAnimation, AnimationFunction> = {
+const ANIMATION_REGISTRY: Record<Animation, AnimationFunction> = {
   fade: animations.fade,
   "fade-up": animations.fadeUp,
   "fade-down": animations.fadeDown,
@@ -44,7 +44,7 @@ export function createAnimation<E extends Element>(
   element: E,
   contextSafe?: gsap.ContextSafeFunc,
 ) {
-  const animate = element.getAttribute("data-aos") as AOSAnimation | null;
+  const animate = element.getAttribute("data-aos") as Animation | null;
   if (!animate) return;
 
   const handleAnimation = ANIMATION_REGISTRY[animate];

@@ -1,4 +1,4 @@
-import type { AOSAnimation, ScrollAnimationOptions } from "../types";
+import type { Animation, ScrollAnimationOptions } from "../types";
 import { anchorPlacements, easings } from "../constants";
 
 interface AOSDataAttributes extends Partial<
@@ -13,11 +13,11 @@ interface AOSDataAttributes extends Partial<
     string
   >
 > {
-  "data-aos": AOSAnimation;
+  "data-aos": Animation;
 }
 
 interface AOSAttributeOptions extends Partial<ScrollAnimationOptions> {
-  animation: AOSAnimation;
+  animation: Animation;
 }
 
 /** 將 options 轉成可直接使用的 AOS data attributes */

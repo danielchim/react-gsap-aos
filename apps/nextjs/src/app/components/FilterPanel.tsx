@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { AOSAnimation, Easing } from "react-gsap-aos";
+import type { Animation, Easing } from "react-gsap-aos";
 import cn from "@/utils/cn";
 
 import AnimationFilter from "./AnimationFilter";
@@ -26,8 +26,8 @@ const tabs: Tab[] = [
 
 interface FilterPanelProps {
   filter?: FilterType[];
-  animation?: AOSAnimation;
-  setAnimation?: (animation: AOSAnimation) => void;
+  animation?: Animation;
+  setAnimation?: (animation: Animation) => void;
   easing?: Easing;
   setEasing?: (easing: Easing) => void;
 }

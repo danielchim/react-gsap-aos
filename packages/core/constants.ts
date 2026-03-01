@@ -1,6 +1,6 @@
 import type {
   AnchorPlacement,
-  AOSAnimation,
+  Animation,
   Easing,
   ScrollAnimationOptions,
 } from "./types";
@@ -20,7 +20,7 @@ export const DEFAULT_OPTIONS: ScrollAnimationOptions = {
 };
 
 /** 動畫種類 */
-export const animations: AOSAnimation[] = [
+export const animations: Animation[] = [
   "fade",
   "fade-up",
   "fade-down",

@@ -80,7 +80,7 @@ export type ZoomAnimation =
   | "zoom-out-left"
   | "zoom-out-right";
 
-export type AOSAnimation =
+export type Animation =
   | FadeAnimation
   | FlipAnimation
   | SlideAnimation

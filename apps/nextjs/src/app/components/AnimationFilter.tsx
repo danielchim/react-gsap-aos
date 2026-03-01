@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import { type AOSAnimation } from "react-gsap-aos";
+import { type Animation } from "react-gsap-aos";
 import { animations } from "react-gsap-aos/constants";
 
 interface AnimationFilterProps {
-  value?: AOSAnimation;
-  onChangeValue?: (next: AOSAnimation) => void;
+  value?: Animation;
+  onChangeValue?: (next: Animation) => void;
 }
 
 const categories = Array.from(
@@ -44,7 +44,7 @@ export default function AnimationFilter({
           className="select"
           value={value}
           onChange={(event) => {
-            onChangeValue?.(event.currentTarget.value as AOSAnimation);
+            onChangeValue?.(event.currentTarget.value as Animation);
           }}
         >
           {animations

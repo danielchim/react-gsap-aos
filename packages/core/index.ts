@@ -5,7 +5,7 @@ export * from "./constants";
 
 export type {
   ScrollAnimationOptions,
-  AOSAnimation,
+  Animation,
   SlideAnimation,
   FadeAnimation,
   FlipAnimation,

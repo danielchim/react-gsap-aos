@@ -2,7 +2,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-import { createAnimation } from "../createAOSAnimation";
+import { createAnimation } from "../createAnimation";
 
 gsap.registerPlugin(useGSAP);
 
