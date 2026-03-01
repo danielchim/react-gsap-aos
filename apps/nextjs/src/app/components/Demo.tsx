@@ -51,7 +51,6 @@ export default function Demo() {
         </div>
       </div>
       {renderPanel(tabIndex)}
-      <OffsetMark />
       <FAB />
     </div>
   );
@@ -66,14 +65,6 @@ function renderPanel(index: number) {
     default:
       break;
   }
-}
-
-function OffsetMark() {
-  return (
-    <div className="bg-primary fixed left-0 h-px" style={{ bottom: 120 }}>
-      <span className="text-primary font-semibold">動畫觸發點</span>
-    </div>
-  );
 }
 
 function FAB() {
