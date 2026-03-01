@@ -24,6 +24,7 @@
     "react-hooks",
     "typescript"
   ],
+  "main": "dist/index.js",
   "files": [
     "dist"
   ],
