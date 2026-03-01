@@ -71,6 +71,7 @@ export function createAnimations<E extends Element>(
   return result;
 }
 
+/** 解析動畫屬性 */
 function parseAttributes<E extends Element>(element: E) {
   const options = { ...DEFAULT_OPTIONS };
 

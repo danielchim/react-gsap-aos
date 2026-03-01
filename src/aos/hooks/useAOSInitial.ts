@@ -31,7 +31,7 @@ const AOS_PROPS_KEYS = [
     return (
       <div ref={containerRef} className="overflow-hidden">
         <div data-aos-container>
-          <div data-aos="fade-up">...</div>
+          <div data-aos="fade-up">Hello AOS</div>
         </div>
       </div>
     )
@@ -41,7 +41,7 @@ const AOS_PROPS_KEYS = [
 export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
   const containerRef = useRef<E | null>(null);
   const observerRef = useRef<MutationObserver | null>(null);
-  // 使用 WeakMap 記錄每個元素對應的動畫實例
+  /** 記錄每個元素對應的動畫實例 */
   const elementAnimations = useRef<WeakMap<HTMLElement, gsap.core.Tween>>(
     new WeakMap(),
   );
@@ -50,6 +50,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
     (context, contextSafe) => {
       if (!containerRef.current || !contextSafe || !context) return;
 
+      /** 新增動畫 */
       const addAnimation = (element: HTMLElement) => {
         const animation = createAnimation(element, contextSafe);
         if (!animation) return;
@@ -57,6 +58,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
         elementAnimations.current.set(element, animation);
       };
 
+      /** 移除動畫 */
       const removeAnimation = (element: HTMLElement) => {
         const animation = elementAnimations.current.get(element);
         if (!animation) return;
@@ -65,7 +67,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
         elementAnimations.current.delete(element);
       };
 
-      // 初始化元素動畫，並存入 WeakMap
+      /**  初始化元素動畫，並存入 WeakMap */
       const initAOSForElements = (elements: HTMLElement[]) => {
         for (const element of elements) {
           if (elementAnimations.current.has(element)) continue;
@@ -73,6 +75,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
         }
       };
 
+      /** 監聽元素變化 */
       const handleMutation: MutationCallback = (mutations) => {
         const addedElements: HTMLElement[] = [];
         const removedElements: HTMLElement[] = [];
@@ -112,11 +115,11 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
           removeAnimation(element);
         }
 
-        // 初始化新增元素動畫
+        // 初始化新增的元素動畫
         initAOSForElements(addedElements);
       };
 
-      // 初次初始化 container 內的所有 [data-aos] 元素
+      // 初次初始化指定容器內的所有 [data-aos] 元素
       initAOSForElements(
         gsap.utils.toArray<HTMLElement>("[data-aos]", containerRef.current),
       );

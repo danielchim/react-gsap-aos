@@ -70,62 +70,7 @@ const presets = {
   },
 } satisfies Record<string, AnimationPreset>;
 
-/** 計算 ScrollTrigger start 語法 */
-function scrollTriggerStart(
-  anchorPlacement: AnchorPlacement,
-  offset: number,
-): string {
-  const [v1, v2] = anchorPlacement.split("-");
-  const anchor = `${v1} ${v2}`;
-
-  if (offset === 0 || Number.isNaN(offset)) return anchor;
-
-  const fix = `${offset > 0 ? "-" : "+"}=${Math.abs(offset)}`;
-  return `${anchor}${fix}`;
-}
-
-/** 建立 ScrollTrigger 動畫 */
-function createScrollTriggerTween(
-  element: HTMLElement,
-  preset: AnimationPreset,
-  fromVars: gsap.TweenVars,
-  toVars: gsap.TweenVars,
-  options?: ScrollAnimationOptions,
-) {
-  const { offset, delay, duration, easing, once, mirror, anchorPlacement } = {
-    ...DEFAULT_OPTIONS,
-    ...options,
-  };
-
-  const container = element.parentElement?.hasAttribute("data-aos-container")
-    ? element.parentElement
-    : null;
-
-  return gsap.fromTo(
-    element,
-    {
-      ...preset.from,
-      ...fromVars,
-    },
-    {
-      ...preset.to,
-      ...toVars,
-      scrollTrigger: {
-        // markers: true,
-        trigger: container || element,
-        toggleActions: mirror
-          ? "play reverse play reverse"
-          : "play none none reverse",
-        once,
-        start: scrollTriggerStart(anchorPlacement, offset),
-      },
-      ease: easing,
-      duration: duration / 1000,
-      delay: delay / 1000,
-    },
-  );
-}
-
+/** 動畫定義 */
 const definitions = {
   fade: { preset: presets.fade, from: {}, to: {} },
   fadeUp: {
@@ -275,6 +220,63 @@ const definitions = {
     to: {},
   },
 } satisfies Record<string, AnimationDefinitions>;
+
+/** 計算 ScrollTrigger 的 start */
+function scrollTriggerStart(
+  anchorPlacement: AnchorPlacement,
+  offset: number,
+): string {
+  const [v1, v2] = anchorPlacement.split("-");
+  const anchor = `${v1} ${v2}`;
+
+  if (offset === 0 || Number.isNaN(offset)) return anchor;
+
+  const fix = `${offset > 0 ? "-" : "+"}=${Math.abs(offset)}`;
+  return `${anchor}${fix}`;
+}
+
+/** 建立 ScrollTrigger 動畫 */
+function createScrollTriggerTween(
+  element: HTMLElement,
+  preset: AnimationPreset,
+  fromVars: gsap.TweenVars,
+  toVars: gsap.TweenVars,
+  options?: ScrollAnimationOptions,
+) {
+  const { offset, delay, duration, easing, once, mirror, anchorPlacement } = {
+    ...DEFAULT_OPTIONS,
+    ...options,
+  };
+
+  /** 上層基準容器 */
+  const container = element.parentElement?.hasAttribute("data-aos-container")
+    ? element.parentElement
+    : null;
+
+  return gsap.fromTo(
+    element,
+    {
+      ...preset.from,
+      ...fromVars,
+    },
+    {
+      ...preset.to,
+      ...toVars,
+      scrollTrigger: {
+        // markers: true,
+        trigger: container || element,
+        toggleActions: mirror
+          ? "play reverse play reverse"
+          : "play none none reverse",
+        once,
+        start: scrollTriggerStart(anchorPlacement, offset),
+      },
+      ease: easing,
+      duration: duration / 1000,
+      delay: delay / 1000,
+    },
+  );
+}
 
 function createAnimationMap<T extends Record<string, AnimationDefinitions>>(
   definitions: T,
