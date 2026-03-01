@@ -54,8 +54,8 @@ importers:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
       react-gsap-aos:
-        specifier: workspace:core
-        version: link:../../packages/core
+        specifier: workspace:*
+        version: link:../../packages/react-gsap-aos
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
@@ -100,7 +100,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/core:
+  packages/react-gsap-aos:
     dependencies:
       '@gsap/react':
         specifier: ^2.1.2

@@ -5,7 +5,10 @@
     "declaration": true,
     "declarationMap": true,
     "noEmit": false,
-    "allowJs": false
+    "allowJs": false,
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.mts"],
   "exclude": ["node_modules", "dist"]
