@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
@@ -11,6 +11,7 @@ const eslintConfig = defineConfig([
   reactPlugin.configs.flat.recommended,
   reactHooks.configs.flat.recommended,
   eslintPluginPrettierRecommended,
+  globalIgnores(["dist", "node_modules"]),
 ]);
 
 export default eslintConfig;

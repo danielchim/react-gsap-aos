@@ -11,8 +11,8 @@
   "peerDependencies": {
     "@gsap/react": "^2.1.2",
     "gsap": "^3.14.2",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "devDependencies": {
     "@types/node": "^20.19.35",
@@ -25,6 +25,9 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1"
   },
