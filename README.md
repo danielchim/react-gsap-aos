@@ -18,6 +18,7 @@ pnpm install gsap @gsap/react
 ## 執行範例專案
 
 ```bash
+cd apps/nextjs
 pnpm dev
 ```
 

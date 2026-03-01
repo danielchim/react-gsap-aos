@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { type Easing } from "@/aos";
-import { easings } from "@/aos/constants";
+import { type Easing } from "react-gsap-aos";
+import { easings } from "react-gsap-aos/constants";
 
 interface EasingFilterProps {
   value?: Easing;

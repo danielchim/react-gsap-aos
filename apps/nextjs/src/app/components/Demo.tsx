@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 
-import { toAOSProps, useAOSInitial } from "@/aos";
-import { animations, easings } from "@/aos/constants";
+import { toAOSProps, useAOSInitial } from "react-gsap-aos";
+import { animations, easings } from "react-gsap-aos/constants";
 import cn from "@/utils/cn";
 
 import FilterPanel from "./FilterPanel";

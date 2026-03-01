@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { AOSAnimation, Easing } from "@/aos";
+import type { AOSAnimation, Easing } from "react-gsap-aos";
 import cn from "@/utils/cn";
 
 import AnimationFilter from "./AnimationFilter";

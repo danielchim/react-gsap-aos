@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { type AOSAnimation } from "@/aos";
-import { animations } from "@/aos/constants";
+import { type AOSAnimation } from "react-gsap-aos";
+import { animations } from "react-gsap-aos/constants";
 
 interface AnimationFilterProps {
   value?: AOSAnimation;
