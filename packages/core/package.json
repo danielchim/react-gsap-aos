@@ -29,5 +29,13 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1"
   },
+  "tsup": {
+    "entry": [
+      "index.ts"
+    ],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
+  },
   "packageManager": "pnpm@10.30.3"
 }
