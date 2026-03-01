@@ -50,74 +50,76 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
     (context, contextSafe) => {
       if (!containerRef.current || !contextSafe || !context) return;
 
-      // 初始化元素動畫，並存入 WeakMap
-      const initAOSForElements = (elements: HTMLElement[]) => {
-        const newElements = elements.filter(
-          (element) => !elementAnimations.current.has(element),
-        );
-        if (newElements.length === 0) return;
+      const addAnimation = (element: HTMLElement) => {
+        const animation = createAnimation(element, contextSafe);
+        if (!animation) return;
 
-        for (const element of newElements) {
-          const animation = createAnimation(element, contextSafe);
-          if (animation) {
-            elementAnimations.current.set(element, animation);
-          }
-        }
+        elementAnimations.current.set(element, animation);
       };
 
-      // 初次初始化 container 內的所有 [data-aos] 元素
-      initAOSForElements(
-        gsap.utils.toArray<HTMLElement>("[data-aos]", containerRef.current),
-      );
+      const removeAnimation = (element: HTMLElement) => {
+        const animation = elementAnimations.current.get(element);
+        if (!animation) return;
+
+        animation.kill();
+        elementAnimations.current.delete(element);
+      };
+
+      // 初始化元素動畫，並存入 WeakMap
+      const initAOSForElements = (elements: HTMLElement[]) => {
+        for (const element of elements) {
+          if (elementAnimations.current.has(element)) continue;
+          addAnimation(element);
+        }
+      };
 
       const handleMutation: MutationCallback = (mutations) => {
         const addedElements: HTMLElement[] = [];
         const removedElements: HTMLElement[] = [];
 
         for (const mutation of mutations) {
-          if (
-            mutation.type === "attributes" &&
-            mutation.attributeName?.startsWith("data-aos")
-          ) {
-            if (mutation.target instanceof HTMLElement) {
+          switch (mutation.type) {
+            case "attributes": {
+              if (!mutation.attributeName?.startsWith("data-aos")) continue;
+              if (!(mutation.target instanceof HTMLElement)) continue;
+
               const element = mutation.target;
               // 先清除舊動畫
-              const prevAnimation = elementAnimations.current.get(element);
-              if (prevAnimation) {
-                prevAnimation.kill();
-                elementAnimations.current.delete(element);
-              }
-
+              removeAnimation(element);
               // 重新建立動畫
-              const animation = createAnimation(element, contextSafe);
-              if (animation) {
-                elementAnimations.current.set(element, animation);
-              }
-            }
-          }
+              addAnimation(element);
 
-          if (mutation.type === "childList") {
-            for (const node of mutation.addedNodes) {
-              collectAOSNodes(node, addedElements);
+              break;
             }
-            for (const node of mutation.removedNodes) {
-              collectAOSNodes(node, removedElements);
+            case "childList": {
+              for (const node of mutation.addedNodes) {
+                collectAOSNodes(node, addedElements);
+              }
+
+              for (const node of mutation.removedNodes) {
+                collectAOSNodes(node, removedElements);
+              }
+
+              break;
             }
+            default:
+              break;
           }
         }
 
         // 清理移除的元素動畫
         for (const element of removedElements) {
-          const animation = elementAnimations.current.get(element);
-          if (animation) {
-            animation.kill();
-            elementAnimations.current.delete(element);
-          }
+          removeAnimation(element);
         }
 
         // 初始化新增元素動畫
         initAOSForElements(addedElements);
       };
+
+      // 初次初始化 container 內的所有 [data-aos] 元素
+      initAOSForElements(
+        gsap.utils.toArray<HTMLElement>("[data-aos]", containerRef.current),
+      );
 
       observerRef.current = new MutationObserver(handleMutation);
       observerRef.current.observe(containerRef.current, {
@@ -147,5 +149,5 @@ function collectAOSNodes(node: Node, result: HTMLElement[]) {
     result.push(node);
   }
 
-  result.push(...Array.from(node.querySelectorAll<HTMLElement>("[data-aos]")));
+  result.push(...node.querySelectorAll<HTMLElement>("[data-aos]"));
 }
