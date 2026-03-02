@@ -52,6 +52,10 @@ function createScrollTriggerTween(
     {
       ...preset.to,
       ...toVars,
+      ease: easing,
+      duration: duration / 1000,
+      delay: delay / 1000,
+      overwrite: "auto",
       scrollTrigger: {
         // markers: true,
         trigger: container || element,
@@ -61,9 +65,6 @@ function createScrollTriggerTween(
         once,
         start: scrollTriggerStart(anchorPlacement, offset),
       },
-      ease: easing,
-      duration: duration / 1000,
-      delay: delay / 1000,
     },
   );
 }

@@ -123,7 +123,7 @@ function SingleAnimation() {
       />
       <ul className="flex flex-col gap-4 overflow-hidden">
         {list.map((_, index) => (
-          <li key={[animation, easing, index].join("-")} data-aos-container>
+          <li key={index} data-aos-container>
             <div
               {...toAOSProps({ animation, easing })}
               className={cn(

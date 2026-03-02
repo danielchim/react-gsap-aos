@@ -61,7 +61,7 @@ export default function Demo() {
 }
 ```
 
-> 只會影響新產生的元素，這是有意為之的行為，不鼓勵動態調整此處設定值，請詳見 [動態切換動畫](#動態切換動畫)
+> 只會影響新產生的元素，這是有意為之的行為，不鼓勵動態調整此處設定值
 
 ### 動畫定位容器
 
@@ -141,32 +141,6 @@ export default function Demo() {
   );
 }
 ```
-
-### 動態切換動畫
-
-直接更改 `data-aos` 會出現問題，此情況 react-gsap-aos 無法監聽到其變化：
-
-```tsx
-const [animation, setAnimation] = useState("fade-up");
-
-<div data-aos-container>
-  <div data-aos={animation}></div>
-</div>;
-```
-
-這是因為 react-gsap-aos 只監聽節點變化來卸載或加載動畫，必須重新創建節點才能生效。
-
-透過更改 `key` 來強制 React 重新創建元素來解決該問題：
-
-```tsx
-const [animation, setAnimation] = useState("fade-up");
-
-<div data-aos-container>
-  <div key={animation} data-aos={animation}></div>
-</div>;
-```
-
-> 礙於複雜度跟除錯難度現階段建議用此方式解決問題，後續更新可能會考慮對每個子元素做屬性監聽。
 
 ### 佈局變化
 

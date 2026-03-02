@@ -19,6 +19,8 @@ const AOS_ATTRIBUTE_KEYS: (AOSAttributeKey | "data-aos")[] = [
   "data-aos-anchor-placement",
 ];
 
+const AOS_SELECTORS = AOS_ATTRIBUTE_KEYS.map((key) => `[${key}]`).join(", ");
+
 /**
  * 初始化 AOS 動畫
  * 
@@ -60,18 +62,6 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
     (context, contextSafe) => {
       if (!containerRef.current || !contextSafe || !context) return;
 
-      /** 新增動畫 */
-      const addAnimation = (element: HTMLElement) => {
-        const animation = createAnimation(
-          element,
-          contextSafe,
-          optionsRef.current,
-        );
-        if (!animation) return;
-
-        elementAnimations.current.set(element, animation);
-      };
-
       /** 移除動畫 */
       const removeAnimation = (element: HTMLElement) => {
         const animation = elementAnimations.current.get(element);
@@ -81,41 +71,49 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         elementAnimations.current.delete(element);
       };
 
-      /**  初始化元素動畫，並存入 WeakMap */
-      const initAOSForElements = (elements: HTMLElement[]) => {
-        for (const element of elements) {
-          if (elementAnimations.current.has(element)) continue;
-          addAnimation(element);
+      /** 新增動畫 */
+      const addAnimation = (element: HTMLElement) => {
+        const newAnimation = createAnimation(
+          element,
+          contextSafe,
+          optionsRef.current,
+        );
+
+        if (newAnimation) {
+          elementAnimations.current.set(element, newAnimation);
         }
+      };
+
+      /** 更新動畫 */
+      const updateAnimation = (element: HTMLElement) => {
+        const prevAnimation = elementAnimations.current.get(element);
+        if (prevAnimation) {
+          prevAnimation.kill();
+          elementAnimations.current.delete(element);
+          gsap.set(element, prevAnimation.vars);
+        }
+
+        addAnimation(element);
       };
 
       /** 監聽元素變化 */
       const handleMutation: MutationCallback = (mutations) => {
         const addedElements: HTMLElement[] = [];
         const removedElements: HTMLElement[] = [];
+        const updatedElements: HTMLElement[] = [];
 
         for (const mutation of mutations) {
           switch (mutation.type) {
             case "attributes": {
-              if (!mutation.attributeName?.startsWith("data-aos")) continue;
               if (!(mutation.target instanceof HTMLElement)) continue;
-
               const element = mutation.target;
-              // 先清除舊動畫
-              removeAnimation(element);
-              // 重新建立動畫
-              addAnimation(element);
+              updatedElements.push(element);
 
               break;
             }
             case "childList": {
-              for (const node of mutation.addedNodes) {
-                collectAOSNodes(node, addedElements);
-              }
-
-              for (const node of mutation.removedNodes) {
-                collectAOSNodes(node, removedElements);
-              }
+              addedElements.push(...collectElements(mutation.addedNodes));
+              removedElements.push(...collectElements(mutation.removedNodes));
 
               break;
             }
@@ -124,19 +122,21 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
           }
         }
 
-        // 清理移除的元素動畫
         for (const element of removedElements) {
           removeAnimation(element);
         }
 
-        // 初始化新增的元素動畫
-        initAOSForElements(addedElements);
+        for (const element of [...addedElements, ...updatedElements]) {
+          updateAnimation(element);
+        }
       };
 
-      // 初次初始化指定容器內的所有 [data-aos] 元素
-      initAOSForElements(
-        gsap.utils.toArray<HTMLElement>("[data-aos]", containerRef.current),
-      );
+      for (const element of gsap.utils.toArray<HTMLElement>(
+        "[data-aos]",
+        containerRef.current,
+      )) {
+        updateAnimation(element);
+      }
 
       observerRef.current = new MutationObserver(handleMutation);
       observerRef.current.observe(containerRef.current, {
@@ -159,12 +159,14 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
   return { containerRef };
 }
 
-function collectAOSNodes(node: Node, result: HTMLElement[]) {
-  if (!(node instanceof HTMLElement)) return;
+function collectElements(nodes: NodeList) {
+  const elements: HTMLElement[] = [];
 
-  if (node.matches("[data-aos]")) {
-    result.push(node);
+  for (const node of nodes) {
+    if (!(node instanceof HTMLElement)) continue;
+    if (node.matches(AOS_SELECTORS)) elements.push(node);
+    elements.push(...node.querySelectorAll<HTMLElement>(AOS_SELECTORS));
   }
 
-  result.push(...node.querySelectorAll<HTMLElement>("[data-aos]"));
+  return elements;
 }
