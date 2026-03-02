@@ -108,13 +108,11 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
               if (!(mutation.target instanceof HTMLElement)) continue;
               const element = mutation.target;
               updatedElements.push(element);
-
               break;
             }
             case "childList": {
               addedElements.push(...collectElements(mutation.addedNodes));
               removedElements.push(...collectElements(mutation.removedNodes));
-
               break;
             }
             default:
@@ -126,7 +124,11 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
           removeAnimation(element);
         }
 
-        for (const element of [...addedElements, ...updatedElements]) {
+        for (const element of addedElements) {
+          addAnimation(element);
+        }
+
+        for (const element of updatedElements) {
           updateAnimation(element);
         }
       };
@@ -135,7 +137,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         "[data-aos]",
         containerRef.current,
       )) {
-        updateAnimation(element);
+        addAnimation(element);
       }
 
       observerRef.current = new MutationObserver(handleMutation);
