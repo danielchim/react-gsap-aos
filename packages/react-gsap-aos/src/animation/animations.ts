@@ -6,7 +6,7 @@ import definitions, {
   AnimationDefinitions,
   AnimationPreset,
 } from "./definitions";
-import { DEFAULT_OPTIONS } from "./constants";
+import mergeOptions from "./utils/mergeOptions";
 
 export type AnimationFunction = (
   element: Element,
@@ -36,11 +36,8 @@ function createScrollTriggerTween(
   toVars: gsap.TweenVars,
   options?: Partial<AnimationOptions>,
 ) {
-  const { offset, delay, duration, easing, once, mirror, anchorPlacement } = {
-    ...DEFAULT_OPTIONS,
-    ...options,
-  };
-
+  const { offset, delay, duration, easing, once, mirror, anchorPlacement } =
+    mergeOptions(options);
   /** 上層基準容器 */
   const container = element.parentElement?.hasAttribute("data-aos-container")
     ? element.parentElement
