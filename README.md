@@ -39,15 +39,25 @@ import { useAOSInitial } from "react-gsap-aos";
 export default function Demo() {
   const { containerRef } = useAOSInitial<HTMLDivElement>();
 
-  return (
-    <div ref={containerRef} className="overflow-hidden">
-      <div data-aos-container>
-        <div data-aos="fade-up" data-aos-offset="200">
-          Hello AOS
-        </div>
-      </div>
-    </div>
-  );
+  return <div ref={containerRef} className="overflow-hidden"></div>;
+}
+```
+
+如果你需要區域調整預設值可以傳入物件：
+
+```tsx
+"use client";
+
+import { useAOSInitial } from "react-gsap-aos";
+
+export default function Demo() {
+  // 這裡會覆蓋掉 easing 和 duration 的預設值，只作用在該區塊
+  const { containerRef } = useAOSInitial<HTMLDivElement>({
+    easing: "bounce",
+    duration: 300,
+  });
+
+  return <div ref={containerRef} className="overflow-hidden"></div>;
 }
 ```
 

@@ -1,14 +1,7 @@
 import type { Animation, AnimationOptions } from "@/types";
 
-import { DEFAULT_OPTIONS } from "./constants";
-import animations from "./animations";
+import animations, { type AnimationFunction } from "./animations";
 import parseAttributes from "./utils/parseAttributes";
-
-type AnimationFunction = (
-  element: Element,
-  contextSafe?: gsap.ContextSafeFunc,
-  options?: AnimationOptions,
-) => gsap.core.Tween;
 
 const ANIMATION_REGISTRY: Record<Animation, AnimationFunction> = {
   fade: animations.fade,
@@ -44,6 +37,7 @@ const ANIMATION_REGISTRY: Record<Animation, AnimationFunction> = {
 export default function createAnimation<E extends Element>(
   element: E,
   contextSafe?: gsap.ContextSafeFunc,
+  options?: Partial<AnimationOptions>,
 ) {
   const animate = element.getAttribute("data-aos") as Animation | null;
   if (!animate) return;
@@ -51,6 +45,8 @@ export default function createAnimation<E extends Element>(
   const handleAnimation = ANIMATION_REGISTRY[animate];
   if (!handleAnimation) return;
 
-  const options = { ...DEFAULT_OPTIONS, ...parseAttributes(element) };
-  return handleAnimation(element, contextSafe, options);
+  return handleAnimation(element, contextSafe, {
+    ...options,
+    ...parseAttributes(element),
+  });
 }

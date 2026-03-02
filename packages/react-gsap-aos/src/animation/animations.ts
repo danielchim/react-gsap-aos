@@ -8,10 +8,10 @@ import definitions, {
 } from "./definitions";
 import { DEFAULT_OPTIONS } from "./constants";
 
-type AnimationFunction = (
+export type AnimationFunction = (
   element: Element,
   contextSafe?: gsap.ContextSafeFunc,
-  options?: AnimationOptions,
+  options?: Partial<AnimationOptions>,
 ) => gsap.core.Tween;
 
 /** 計算 ScrollTrigger 的 start */
@@ -34,7 +34,7 @@ function createScrollTriggerTween(
   preset: AnimationPreset,
   fromVars: gsap.TweenVars,
   toVars: gsap.TweenVars,
-  options?: AnimationOptions,
+  options?: Partial<AnimationOptions>,
 ) {
   const { offset, delay, duration, easing, once, mirror, anchorPlacement } = {
     ...DEFAULT_OPTIONS,

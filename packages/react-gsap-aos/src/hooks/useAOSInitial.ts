@@ -1,8 +1,8 @@
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-import type { AOSAttributeKey } from "@/types";
+import type { AnimationOptions, AOSAttributeKey } from "@/types";
 
 import createAnimation from "@/animation/createAnimation";
 
@@ -40,13 +40,21 @@ const AOS_ATTRIBUTE_KEYS: (AOSAttributeKey | "data-aos")[] = [
   }
  * ```
  */
-export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
+export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
+  options?: Partial<AnimationOptions>,
+) {
   const containerRef = useRef<E | null>(null);
   const observerRef = useRef<MutationObserver | null>(null);
   /** 記錄每個元素對應的動畫實例 */
   const elementAnimations = useRef<WeakMap<HTMLElement, gsap.core.Tween>>(
     new WeakMap(),
   );
+  const optionsRef = useRef(options);
+
+  // 使用靜態寫入，下次新增動畫才會套用覆蓋預設值
+  useLayoutEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
 
   useGSAP(
     (context, contextSafe) => {
@@ -54,7 +62,11 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
 
       /** 新增動畫 */
       const addAnimation = (element: HTMLElement) => {
-        const animation = createAnimation(element, contextSafe);
+        const animation = createAnimation(
+          element,
+          contextSafe,
+          optionsRef.current,
+        );
         if (!animation) return;
 
         elementAnimations.current.set(element, animation);
