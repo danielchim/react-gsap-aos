@@ -1,5 +1,6 @@
-import type { Animation, ScrollAnimationOptions } from "../types";
-import { anchorPlacements, easings } from "../constants";
+import type { Animation, AnimationOptions } from "@/types";
+
+import { anchorPlacements, easings } from "@/constants";
 
 interface AOSDataAttributes extends Partial<
   Record<
@@ -16,7 +17,7 @@ interface AOSDataAttributes extends Partial<
   "data-aos": Animation;
 }
 
-interface AOSAttributeOptions extends Partial<ScrollAnimationOptions> {
+interface AOSAttributeOptions extends Partial<AnimationOptions> {
   animation: Animation;
 }
 
@@ -36,14 +37,14 @@ export default function toAOSProps(options: AOSAttributeOptions) {
     ),
   };
 
-  return cleanAttrs(attrs);
+  return omitNil(attrs);
 }
 
-function cleanAttrs<T extends object>(obj: T) {
-  const result = {} as T;
+function omitNil<T extends object>(obj: T): Partial<T> {
+  const result: Partial<T> = {};
 
   for (const [key, value] of Object.entries(obj)) {
-    if (value !== undefined) {
+    if (value !== undefined && value !== null) {
       result[key as keyof T] = value;
     }
   }

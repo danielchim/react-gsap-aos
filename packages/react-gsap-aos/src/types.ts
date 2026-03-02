@@ -1,4 +1,5 @@
-export interface ScrollAnimationOptions {
+/** 動畫選項 */
+export interface AnimationOptions {
   /**
    * 提前觸發動畫的距離 (px)
    *
@@ -80,12 +81,14 @@ export type ZoomAnimation =
   | "zoom-out-left"
   | "zoom-out-right";
 
+/** 動畫類型 */
 export type Animation =
   | FadeAnimation
   | FlipAnimation
   | SlideAnimation
   | ZoomAnimation;
 
+/** 動畫錨點 */
 export type AnchorPlacement =
   | "top-bottom"
   | "top-center"
@@ -97,4 +100,17 @@ export type AnchorPlacement =
   | "bottom-center"
   | "bottom-top";
 
+/** 動畫曲線 */
 export type Easing = gsap.EaseString;
+
+type AttributeKey =
+  | "offset"
+  | "delay"
+  | "duration"
+  | "easing"
+  | "once"
+  | "mirror"
+  | "anchor-placement";
+
+/** AOS 屬性 */
+export type AOSAttributeKey = `data-aos-${AttributeKey}`;

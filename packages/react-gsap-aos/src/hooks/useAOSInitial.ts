@@ -2,11 +2,13 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-import { createAnimation } from "../createAnimation";
+import type { AOSAttributeKey } from "@/types";
+
+import createAnimation from "@/animation/createAnimation";
 
 gsap.registerPlugin(useGSAP);
 
-const AOS_PROPS_KEYS = [
+const AOS_ATTRIBUTE_KEYS: (AOSAttributeKey | "data-aos")[] = [
   "data-aos",
   "data-aos-offset",
   "data-aos-delay",
@@ -129,7 +131,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>() {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: AOS_PROPS_KEYS,
+        attributeFilter: AOS_ATTRIBUTE_KEYS,
       });
 
       return () => {

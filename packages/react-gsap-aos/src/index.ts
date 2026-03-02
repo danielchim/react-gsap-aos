@@ -1,10 +1,10 @@
 export { default as useAOSInitial } from "./hooks/useAOSInitial";
 export { default as toAOSProps } from "./utils/toAOSProps";
 export { default as refreshAOS } from "./utils/refreshAOS";
-export * from "./constants";
+export { animations, anchorPlacements, easings } from "./constants";
 
 export type {
-  ScrollAnimationOptions,
+  AnimationOptions,
   Animation,
   SlideAnimation,
   FadeAnimation,
