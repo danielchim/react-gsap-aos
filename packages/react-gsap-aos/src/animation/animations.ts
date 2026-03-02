@@ -1,3 +1,5 @@
+import gsap from "gsap";
+
 import type { AnchorPlacement, AnimationOptions } from "@/types";
 
 import definitions, {
