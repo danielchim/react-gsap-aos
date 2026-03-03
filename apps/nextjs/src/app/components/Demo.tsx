@@ -10,6 +10,7 @@ import GithubButton from "@/components/GithubButton";
 import FAB from "./FAB";
 import AllAnimations from "./AllAnimations";
 import SingleAnimation from "./SingleAnimation";
+import Typography from "./Typography";
 
 interface Tab {
   value: string;
@@ -25,6 +26,7 @@ const tabs: Tab[] = [
     value: "single",
     label: "單一動畫",
   },
+  { value: "typography", label: "文本測試" },
 ];
 
 export default function Demo() {
@@ -72,6 +74,12 @@ function renderPanel(index: number) {
       return (
         <Provider>
           <SingleAnimation />
+        </Provider>
+      );
+    case 2:
+      return (
+        <Provider>
+          <Typography />
         </Provider>
       );
     default:
