@@ -1,15 +1,14 @@
+export { anchorPlacements, animations, easings } from "./constants";
 export { default as useAOSInitial } from "./hooks/useAOSInitial";
-export { default as toAOSProps } from "./utils/toAOSProps";
-export { default as refreshAOS } from "./utils/refreshAOS";
-export { animations, anchorPlacements, easings } from "./constants";
-
 export type {
-  AnimationOptions,
+  AnchorPlacement,
   Animation,
-  SlideAnimation,
+  AnimationOptions,
+  Easing,
   FadeAnimation,
   FlipAnimation,
+  SlideAnimation,
   ZoomAnimation,
-  AnchorPlacement,
-  Easing,
 } from "./types";
+export { default as refreshAOS } from "./utils/refreshAOS";
+export { default as toAOSProps } from "./utils/toAOSProps";

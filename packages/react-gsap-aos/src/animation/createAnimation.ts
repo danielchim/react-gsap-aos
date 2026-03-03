@@ -1,7 +1,7 @@
-import type { Animation, AnimationOptions } from "@/types";
-
-import animations, { type AnimationFunction } from "./animations";
 import parseAttributes from "./utils/parseAttributes";
+import animations, { type AnimationFunction } from "./animations";
+
+import type { Animation, AnimationOptions } from "@/types";
 
 const ANIMATION_REGISTRY: Record<Animation, AnimationFunction> = {
   fade: animations.fade,

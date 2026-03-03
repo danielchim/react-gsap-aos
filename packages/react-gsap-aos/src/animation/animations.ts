@@ -1,12 +1,12 @@
 import gsap from "gsap";
 
-import type { AnchorPlacement, AnimationOptions } from "@/types";
-
+import mergeOptions from "./utils/mergeOptions";
 import definitions, {
   AnimationDefinitions,
   AnimationPreset,
 } from "./definitions";
-import mergeOptions from "./utils/mergeOptions";
+
+import type { AnchorPlacement, AnimationOptions } from "@/types";
 
 export type AnimationFunction = (
   element: HTMLElement,

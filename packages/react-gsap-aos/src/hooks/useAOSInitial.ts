@@ -1,13 +1,13 @@
 import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-
-import type { AnimationOptions, AOSAttributeKey } from "@/types";
+import gsap from "gsap";
 
 import createAnimation from "@/animation/createAnimation";
+import type { AnimationOptions, AOSAttributeKey } from "@/types";
 
 gsap.registerPlugin(useGSAP);
 
+/** AOS 屬性 */
 const AOS_ATTRIBUTE_KEYS: (AOSAttributeKey | "data-aos")[] = [
   "data-aos",
   "data-aos-offset",
@@ -19,6 +19,7 @@ const AOS_ATTRIBUTE_KEYS: (AOSAttributeKey | "data-aos")[] = [
   "data-aos-anchor-placement",
 ];
 
+/** AOS 選擇器 */
 const AOS_SELECTORS = "[data-aos]";
 
 /**
@@ -85,6 +86,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         if (prevAnimation) {
           prevAnimation.kill();
           elementAnimations.current.delete(element);
+          // 將動畫回到原始狀態避免錯誤
           gsap.set(element, prevAnimation.vars).kill();
         }
 
@@ -128,6 +130,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         }
       });
 
+      // 初始化
       for (const element of gsap.utils.toArray<HTMLElement>(
         AOS_SELECTORS,
         containerRef.current,
@@ -156,6 +159,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
   return { containerRef };
 }
 
+/** 搜尋 [data-aos] 變動元素 */
 function collectElements(nodes: NodeList) {
   const elements: HTMLElement[] = [];
 

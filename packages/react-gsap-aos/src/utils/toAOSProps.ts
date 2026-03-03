@@ -1,6 +1,5 @@
-import type { Animation, AnimationOptions } from "@/types";
-
 import { anchorPlacements, easings } from "@/constants";
+import type { Animation, AnimationOptions } from "@/types";
 
 interface AOSDataAttributes extends Partial<
   Record<

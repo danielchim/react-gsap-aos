@@ -1,6 +1,6 @@
-import type { AnimationOptions, AOSAttributeKey } from "@/types";
-
 import { anchorPlacements, easings } from "../constants";
+
+import type { AnimationOptions, AOSAttributeKey } from "@/types";
 
 /** AOS 屬性對應 */
 const AOS_ATTRIBUTE_MAP = {

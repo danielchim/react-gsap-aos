@@ -1,6 +1,6 @@
-import type { AnimationOptions } from "@/types";
+import { anchorPlacements, DEFAULT_OPTIONS, easings } from "../constants";
 
-import { DEFAULT_OPTIONS, anchorPlacements, easings } from "../constants";
+import type { AnimationOptions } from "@/types";
 
 /** 跟預設值合併動畫選項 */
 export default function mergeOptions(
