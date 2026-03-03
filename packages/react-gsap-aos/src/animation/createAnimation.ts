@@ -1,9 +1,9 @@
 import parseAttributes from "./utils/parseAttributes";
-import animations, { type AnimationFunction } from "./animations";
+import animations, { type CreateAnimationFunction } from "./animations";
 
 import type { Animation, AnimationOptions } from "@/types";
 
-const ANIMATION_REGISTRY: Record<Animation, AnimationFunction> = {
+const ANIMATION_REGISTRY: Record<Animation, CreateAnimationFunction> = {
   fade: animations.fade,
   "fade-up": animations.fadeUp,
   "fade-down": animations.fadeDown,

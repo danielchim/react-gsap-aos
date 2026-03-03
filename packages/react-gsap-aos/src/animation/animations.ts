@@ -8,7 +8,7 @@ import definitions, {
 
 import type { AnchorPlacement, AnimationOptions } from "@/types";
 
-export type AnimationFunction = (
+export type CreateAnimationFunction = (
   element: HTMLElement,
   options?: Partial<AnimationOptions>,
 ) => gsap.core.Tween;
@@ -72,8 +72,8 @@ function createScrollTriggerTween(
 /** 建立動畫物件組 */
 function createAnimationMap<T extends Record<string, AnimationDefinitions>>(
   definitions: T,
-): { [K in keyof T]: AnimationFunction } {
-  const result = {} as Record<keyof T, AnimationFunction>;
+): { [K in keyof T]: CreateAnimationFunction } {
+  const result = {} as Record<keyof T, CreateAnimationFunction>;
   const keys = Object.keys(definitions) as Array<keyof T>;
 
   for (const key of keys) {

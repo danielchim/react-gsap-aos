@@ -31,9 +31,14 @@ export default function toAOSProps(options: AOSAttributeOptions) {
 function omitNil<T extends object>(obj: T): Partial<T> {
   const result: Partial<T> = {};
 
-  for (const [key, value] of Object.entries(obj)) {
+  const keys = Object.keys(obj) as Array<keyof T>;
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const value = obj[key];
+
     if (value !== undefined && value !== null) {
-      result[key as keyof T] = value;
+      result[key] = value;
     }
   }
 
