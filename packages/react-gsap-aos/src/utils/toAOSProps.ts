@@ -1,18 +1,7 @@
 import { anchorPlacements, easings } from "@/constants";
-import type { Animation, AnimationOptions } from "@/types";
+import type { Animation, AnimationOptions, AOSAttributeKey } from "@/types";
 
-interface AOSDataAttributes extends Partial<
-  Record<
-    | "data-aos-offset"
-    | "data-aos-delay"
-    | "data-aos-duration"
-    | "data-aos-easing"
-    | "data-aos-mirror"
-    | "data-aos-once"
-    | "data-aos-anchor-placement",
-    string
-  >
-> {
+interface AOSDataAttributes extends Partial<Record<AOSAttributeKey, string>> {
   "data-aos": Animation;
 }
 

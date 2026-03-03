@@ -7,7 +7,7 @@
 ## 安裝依賴
 
 ```bash
-pnpm install gsap @gsap/react
+pnpm install react-gsap-aos gsap @gsap/react
 ```
 
 - [gsap](https://gsap.com/docs/v3/Installation)

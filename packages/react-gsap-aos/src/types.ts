@@ -22,6 +22,8 @@ export interface AnimationOptions {
    * 緩動曲線
    *
    * @default "none"
+   *
+   * @see {@link https://gsap.com/docs/v3/Eases|GSAP 文件}
    */
   easing: Easing;
   /**
@@ -39,9 +41,9 @@ export interface AnimationOptions {
   /**
    * 元素在視窗的指定位置觸發動畫
    *
-   * [GSAP 文件](https://gsap.com/docs/v3/Eases)
-   *
    * @default "top-bottom"
+   *
+   * @see {@link https://gsap.com/docs/v3/Plugins/ScrollTrigger/#start|GSAP 文件}
    */
   anchorPlacement: AnchorPlacement;
 }

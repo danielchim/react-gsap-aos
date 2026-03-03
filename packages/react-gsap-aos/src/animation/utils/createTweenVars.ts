@@ -22,7 +22,7 @@ export function scale(x: number, y?: number) {
 }
 
 /**
- * @see https://gsap.com/docs/v3/GSAP/CorePlugins/CSS/#3d-transforms
+ * @see {@link https://gsap.com/docs/v3/GSAP/CorePlugins/CSS/#3d-transforms|GSAP 文件}
  */
 export function perspective(value: number) {
   return {
