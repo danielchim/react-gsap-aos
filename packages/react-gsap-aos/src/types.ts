@@ -33,13 +33,13 @@ export interface AnimationOptions {
    */
   once: boolean;
   /**
-   * 滾動過元素後，動畫是否反向播放
+   * 是否於離開時反向播放
    *
    * @default false
    */
   mirror: boolean;
   /**
-   * 元素在視窗的指定位置觸發動畫
+   * 觸發位置設定
    *
    * @default "top-bottom"
    *
