@@ -1,4 +1,6 @@
-export default function GithubButton() {
+import { memo } from "react";
+
+export default memo(function GithubButton() {
   return (
     <a
       href="https://github.com/GaiaYang/react-gsap-aos/tree/main/packages/react-gsap-aos"
@@ -23,4 +25,4 @@ export default function GithubButton() {
       <span className="sr-only">GitHub</span>
     </a>
   );
-}
+});

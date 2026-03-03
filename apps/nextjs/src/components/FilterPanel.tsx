@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import type { Animation, Easing } from "react-gsap-aos";
 import cn from "@/utils/cn";
 
 import AnimationFilter from "./AnimationFilter";
@@ -26,19 +25,9 @@ const tabs: Tab[] = [
 
 interface FilterPanelProps {
   filter?: FilterType[];
-  animation?: Animation;
-  setAnimation?: (animation: Animation) => void;
-  easing?: Easing;
-  setEasing?: (easing: Easing) => void;
 }
 
-export default function FilterPanel({
-  filter,
-  animation,
-  setAnimation,
-  easing,
-  setEasing,
-}: FilterPanelProps) {
+export default function FilterPanel({ filter }: FilterPanelProps) {
   const [tabIndex, setTabIndex] = useState(0);
   const _tabs = tabs.filter((item) => {
     if (Array.isArray(filter) && filter.length > 0) {
@@ -66,11 +55,9 @@ export default function FilterPanel({
   function renderPanel() {
     switch (_tabs[tabIndex].value) {
       case "animation":
-        return (
-          <AnimationFilter value={animation} onChangeValue={setAnimation} />
-        );
+        return <AnimationFilter />;
       case "easing":
-        return <EasingFilter value={easing} onChangeValue={setEasing} />;
+        return <EasingFilter />;
       default:
         break;
     }

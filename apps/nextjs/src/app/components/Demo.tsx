@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useAOSInitial } from "react-gsap-aos";
+import { Provider } from "jotai";
 
 import cn from "@/utils/cn";
 
 import GithubButton from "@/components/GithubButton";
+import FAB from "./FAB";
 import AllAnimations from "./AllAnimations";
 import SingleAnimation from "./SingleAnimation";
-import FAB from "./FAB";
 
 interface Tab {
   value: string;
@@ -62,9 +63,17 @@ export default function Demo() {
 function renderPanel(index: number) {
   switch (index) {
     case 0:
-      return <AllAnimations />;
+      return (
+        <Provider>
+          <AllAnimations />
+        </Provider>
+      );
     case 1:
-      return <SingleAnimation />;
+      return (
+        <Provider>
+          <SingleAnimation />
+        </Provider>
+      );
     default:
       break;
   }

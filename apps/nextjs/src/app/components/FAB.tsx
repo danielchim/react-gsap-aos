@@ -1,4 +1,6 @@
-export default function FAB() {
+import { memo } from "react";
+
+export default memo(function FAB() {
   return (
     <button
       type="button"
@@ -10,4 +12,4 @@ export default function FAB() {
       ↑
     </button>
   );
-}
+});

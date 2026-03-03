@@ -1,21 +1,16 @@
 import { useState } from "react";
-
+import { useAtom } from "jotai";
 import { type Animation } from "react-gsap-aos";
 import { animations } from "react-gsap-aos/constants";
 
-interface AnimationFilterProps {
-  value?: Animation;
-  onChangeValue?: (next: Animation) => void;
-}
+import { animationAtom } from "@/jotai/animation";
 
 const categories = Array.from(
   new Set(animations.map((item) => item.split("-")[0])),
 );
 
-export default function AnimationFilter({
-  value,
-  onChangeValue,
-}: AnimationFilterProps) {
+export default function AnimationFilter() {
+  const [animation, setAnimation] = useAtom(animationAtom);
   const [category, setCategory] = useState(categories[0]);
 
   return (
@@ -28,7 +23,7 @@ export default function AnimationFilter({
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
             setCategory(nextValue);
-            onChangeValue?.(
+            setAnimation(
               animations.find((item) => item.startsWith(nextValue)) ||
                 animations[0],
             );
@@ -42,9 +37,9 @@ export default function AnimationFilter({
         </select>
         <select
           className="select w-full"
-          value={value}
+          value={animation}
           onChange={(event) => {
-            onChangeValue?.(event.currentTarget.value as Animation);
+            setAnimation(event.currentTarget.value as Animation);
           }}
         >
           {animations

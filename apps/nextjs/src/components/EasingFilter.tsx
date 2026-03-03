@@ -1,21 +1,16 @@
 import { useState } from "react";
-
+import { useAtom } from "jotai";
 import { type Easing } from "react-gsap-aos";
 import { easings } from "react-gsap-aos/constants";
 
-interface EasingFilterProps {
-  value?: Easing;
-  onChangeValue?: (next: Easing) => void;
-}
+import { easingAtom } from "@/jotai/animation";
 
 const categories = Array.from(
   new Set(easings.map((item) => item.split(".")[0])),
 );
 
-export default function EasingFilter({
-  value,
-  onChangeValue,
-}: EasingFilterProps) {
+export default function EasingFilter() {
+  const [easing, setEasing] = useAtom(easingAtom);
   const [category, setCategory] = useState(categories[0]);
 
   return (
@@ -28,7 +23,7 @@ export default function EasingFilter({
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
             setCategory(nextValue);
-            onChangeValue?.(
+            setEasing(
               easings.find((item) => item.startsWith(nextValue)) || easings[0],
             );
           }}
@@ -41,10 +36,10 @@ export default function EasingFilter({
         </select>
         <select
           className="select w-full"
-          disabled={value === "none"}
-          value={value}
+          disabled={easing === "none"}
+          value={easing}
           onChange={(event) => {
-            onChangeValue?.(event.currentTarget.value as Easing);
+            setEasing(event.currentTarget.value as Easing);
           }}
         >
           {easings
