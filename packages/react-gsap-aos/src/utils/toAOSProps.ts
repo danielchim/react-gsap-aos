@@ -50,7 +50,12 @@ function toBooleanAttr(value?: boolean) {
 }
 
 function toNumberAttr(value?: number) {
-  return typeof value === "number" ? String(value) : undefined;
+  return typeof value === "number" &&
+    !Number.isNaN(value) &&
+    !Number.isFinite(value) &&
+    Number.isInteger(value)
+    ? String(value)
+    : undefined;
 }
 
 function validateEnumValue<T>(list: readonly T[], value: T) {

@@ -81,8 +81,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         const animation = animationsWeakMap.current.get(element);
         if (!animation) return;
 
-        animation.kill();
-        animation.revert();
+        animation.kill().revert();
         animationsWeakMap.current.delete(element);
       };
 
@@ -99,20 +98,29 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         const updatedElements = new Set<HTMLElement>();
 
         for (const mutation of mutations) {
-          if (mutation.type === "attributes") {
-            if (mutation.target instanceof HTMLElement) {
-              updatedElements.add(mutation.target);
-            }
+          if (
+            mutation.type === "attributes" &&
+            mutation.target instanceof HTMLElement
+          ) {
+            updatedElements.add(mutation.target);
           } else if (mutation.type === "childList") {
             collectElements(mutation.addedNodes, addedElements);
             collectElements(mutation.removedNodes, removedElements);
           }
         }
 
-        // 移除優先於新增，避免重複初始化
-        removedElements.forEach(removeAnimation);
-        addedElements.forEach(addAnimation);
-        updatedElements.forEach(updateAnimation);
+        // 移除 => 新增 => 更新，避免重複初始化
+        for (const element of removedElements) {
+          removeAnimation(element);
+        }
+
+        for (const element of addedElements) {
+          addAnimation(element);
+        }
+
+        for (const element of updatedElements) {
+          updateAnimation(element);
+        }
       };
 
       // 初始化
@@ -149,8 +157,8 @@ function collectElements(nodes: NodeList, result: Set<HTMLElement>) {
   for (const node of nodes) {
     if (!(node instanceof HTMLElement)) continue;
     if (node.matches(AOS_SELECTORS)) result.add(node);
-    node
-      .querySelectorAll<HTMLElement>(AOS_SELECTORS)
-      .forEach((el) => result.add(el));
+    for (const element of node.querySelectorAll<HTMLElement>(AOS_SELECTORS)) {
+      result.add(element);
+    }
   }
 }

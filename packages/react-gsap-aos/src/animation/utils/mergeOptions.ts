@@ -20,7 +20,8 @@ export default function mergeOptions(
           if (
             typeof value === "number" &&
             !Number.isNaN(value) &&
-            !Number.isFinite(value)
+            !Number.isFinite(value) &&
+            Number.isInteger(value)
           ) {
             result[key] = value;
           }
