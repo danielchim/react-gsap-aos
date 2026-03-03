@@ -7,6 +7,7 @@ export default function mergeOptions(
   ...array: (Partial<AnimationOptions> | undefined | null)[]
 ): AnimationOptions {
   const result = { ...DEFAULT_OPTIONS };
+
   for (const options of array) {
     if (!options) continue;
 

@@ -94,9 +94,37 @@ export default function Demo() {
 
 使用 `data-aos-container` 標記定位容器， react-gsap-aos 會優先尋找上一層容器，如果沒有指定則會優先以動畫元素本身為主，請確保每個容器只對應一個動畫元素。
 
+此外像這樣嵌套是可以正常運作的：
+
+```tsx
+"use client";
+
+import { useAOSInitial } from "react-gsap-aos";
+
+export default function Demo() {
+  const { containerRef } = useAOSInitial<HTMLDivElement>();
+
+  return (
+    <div ref={containerRef} className="overflow-hidden">
+      <div data-aos-container>
+        <div data-aos="fade-up" data-aos-offset="200">
+          Hello AOS
+        </div>
+        // ✅ 這部分可以正常獨立運作
+        <div data-aos-container>
+          <div data-aos="fade-up" data-aos-offset="200">
+            Hello AOS
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
 ### 使用 `data-aos` 屬性
 
-帶有 `data-aos` 前綴屬性的元素會被添加動畫，結尾對應各自的參數。
+帶有 `data-aos` 前綴屬性的元素會被添加動畫，結尾對應各自的參數。 [型別](#型別)
 
 ```tsx
 <div
@@ -115,7 +143,7 @@ export default function Demo() {
 
 ### 使用 `toAOSProps`
 
-`toAOSProps` 提供完整型別提示、會過濾無效屬性，幫助你快速生成正確的 AOS 屬性。
+`toAOSProps` 提供完整型別提示、會過濾無效屬性，幫助你快速生成正確的 AOS 屬性。 [型別](#型別)
 
 ```tsx
 "use client";
@@ -157,7 +185,7 @@ refreshAOS();
 
 `refreshAOS()` 內部封裝了 `ScrollTrigger.refresh(true)`，在大部分情況下可以安全刷新動畫位置。
 
-## API
+## 型別
 
 ### 屬性選項
 

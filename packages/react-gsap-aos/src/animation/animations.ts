@@ -9,8 +9,7 @@ import definitions, {
 import mergeOptions from "./utils/mergeOptions";
 
 export type AnimationFunction = (
-  element: Element,
-  contextSafe?: gsap.ContextSafeFunc,
+  element: HTMLElement,
   options?: Partial<AnimationOptions>,
 ) => gsap.core.Tween;
 
@@ -32,12 +31,13 @@ function scrollTriggerStart(
 function createScrollTriggerTween(
   element: HTMLElement,
   preset: AnimationPreset,
-  fromVars: gsap.TweenVars,
-  toVars: gsap.TweenVars,
+  vars: AnimationPreset,
   options?: Partial<AnimationOptions>,
 ) {
+  const { from, to } = vars;
   const { offset, delay, duration, easing, once, mirror, anchorPlacement } =
     mergeOptions(options);
+
   /** 上層基準容器 */
   const container = element.parentElement?.hasAttribute("data-aos-container")
     ? element.parentElement
@@ -47,11 +47,11 @@ function createScrollTriggerTween(
     element,
     {
       ...preset.from,
-      ...fromVars,
+      ...from,
     },
     {
       ...preset.to,
-      ...toVars,
+      ...to,
       ease: easing,
       duration: duration / 1000,
       delay: delay / 1000,
@@ -77,15 +77,10 @@ function createAnimationMap<T extends Record<string, AnimationDefinitions>>(
   const keys = Object.keys(definitions) as Array<keyof T>;
 
   for (const key of keys) {
-    const { preset, from, to } = definitions[key];
+    const { preset, vars } = definitions[key];
 
-    result[key] = (element, contextSafe, options) => {
-      return (
-        contextSafe
-          ? contextSafe(createScrollTriggerTween)
-          : createScrollTriggerTween
-      )(element, preset, from, to, options);
-    };
+    result[key] = (element, options) =>
+      createScrollTriggerTween(element, preset, vars, options);
   }
 
   return result;

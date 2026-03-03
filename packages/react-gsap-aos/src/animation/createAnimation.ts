@@ -34,9 +34,8 @@ const ANIMATION_REGISTRY: Record<Animation, AnimationFunction> = {
 };
 
 /** 建立動畫元素 */
-export default function createAnimation<E extends Element>(
+export default function createAnimation<E extends HTMLElement>(
   element: E,
-  contextSafe?: gsap.ContextSafeFunc,
   options?: Partial<AnimationOptions>,
 ) {
   const animate = element.getAttribute("data-aos") as Animation | null;
@@ -45,7 +44,7 @@ export default function createAnimation<E extends Element>(
   const handleAnimation = ANIMATION_REGISTRY[animate];
   if (!handleAnimation) return;
 
-  return handleAnimation(element, contextSafe, {
+  return handleAnimation(element, {
     ...options,
     ...parseAttributes(element),
   });

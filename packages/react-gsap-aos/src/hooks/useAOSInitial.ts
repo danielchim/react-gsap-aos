@@ -19,7 +19,7 @@ const AOS_ATTRIBUTE_KEYS: (AOSAttributeKey | "data-aos")[] = [
   "data-aos-anchor-placement",
 ];
 
-const AOS_SELECTORS = AOS_ATTRIBUTE_KEYS.map((key) => `[${key}]`).join(", ");
+const AOS_SELECTORS = "[data-aos]";
 
 /**
  * 初始化 AOS 動畫
@@ -59,8 +59,8 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
   }, [options]);
 
   useGSAP(
-    (context, contextSafe) => {
-      if (!containerRef.current || !contextSafe || !context) return;
+    (_, contextSafe) => {
+      if (!containerRef.current || !contextSafe) return;
 
       /** 移除動畫 */
       const removeAnimation = (element: HTMLElement) => {
@@ -73,15 +73,10 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
 
       /** 新增動畫 */
       const addAnimation = (element: HTMLElement) => {
-        const newAnimation = createAnimation(
-          element,
-          contextSafe,
-          optionsRef.current,
-        );
+        const newAnimation = createAnimation(element, optionsRef.current);
+        if (!newAnimation) return;
 
-        if (newAnimation) {
-          elementAnimations.current.set(element, newAnimation);
-        }
+        elementAnimations.current.set(element, newAnimation);
       };
 
       /** 更新動畫 */
@@ -90,14 +85,14 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         if (prevAnimation) {
           prevAnimation.kill();
           elementAnimations.current.delete(element);
-          gsap.set(element, prevAnimation.vars);
+          gsap.set(element, prevAnimation.vars).kill();
         }
 
         addAnimation(element);
       };
 
       /** 監聽元素變化 */
-      const handleMutation: MutationCallback = (mutations) => {
+      const handleMutation: MutationCallback = contextSafe((mutations) => {
         const addedElements: HTMLElement[] = [];
         const removedElements: HTMLElement[] = [];
         const updatedElements: HTMLElement[] = [];
@@ -131,10 +126,10 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         for (const element of updatedElements) {
           updateAnimation(element);
         }
-      };
+      });
 
       for (const element of gsap.utils.toArray<HTMLElement>(
-        "[data-aos]",
+        AOS_SELECTORS,
         containerRef.current,
       )) {
         addAnimation(element);
