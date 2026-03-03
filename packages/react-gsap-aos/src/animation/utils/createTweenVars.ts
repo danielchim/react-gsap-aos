@@ -21,9 +21,7 @@ export function scale(x: number, y?: number) {
       } satisfies gsap.TweenVars);
 }
 
-/**
- * @see {@link https://gsap.com/docs/v3/GSAP/CorePlugins/CSS/#3d-transforms|GSAP 文件}
- */
+/** @see https://gsap.com/docs/v3/GSAP/CorePlugins/CSS/#3d-transforms */
 export function perspective(value: number) {
   return {
     transformPerspective: value,

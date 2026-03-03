@@ -49,7 +49,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
   const containerRef = useRef<E | null>(null);
   const observerRef = useRef<MutationObserver | null>(null);
   /** 記錄每個元素對應的動畫實例 */
-  const elementAnimations = useRef<WeakMap<HTMLElement, gsap.core.Tween>>(
+  const animationsWeakMap = useRef<WeakMap<HTMLElement, gsap.core.Tween>>(
     new WeakMap(),
   );
   const optionsRef = useRef(options);
@@ -65,11 +65,11 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
 
       /** 移除動畫 */
       const removeAnimation = (element: HTMLElement) => {
-        const animation = elementAnimations.current.get(element);
+        const animation = animationsWeakMap.current.get(element);
         if (!animation) return;
 
         animation.kill();
-        elementAnimations.current.delete(element);
+        animationsWeakMap.current.delete(element);
       };
 
       /** 新增動畫 */
@@ -77,16 +77,16 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         const newAnimation = createAnimation(element, optionsRef.current);
         if (!newAnimation) return;
 
-        elementAnimations.current.set(element, newAnimation);
+        animationsWeakMap.current.set(element, newAnimation);
       };
 
       /** 更新動畫 */
       const updateAnimation = (element: HTMLElement) => {
-        const prevAnimation = elementAnimations.current.get(element);
+        const prevAnimation = animationsWeakMap.current.get(element);
         if (prevAnimation) {
           prevAnimation.kill();
-          elementAnimations.current.delete(element);
-          // 將動畫回到原始狀態避免錯誤
+          animationsWeakMap.current.delete(element);
+          // TODO 回朔動畫，目前這樣寫才會功能正常，需要找更好的方案
           gsap.set(element, prevAnimation.vars).kill();
         }
 
@@ -95,39 +95,25 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
 
       /** 監聽元素變化 */
       const handleMutation: MutationCallback = contextSafe((mutations) => {
-        const addedElements: HTMLElement[] = [];
-        const removedElements: HTMLElement[] = [];
-        const updatedElements: HTMLElement[] = [];
+        const removedElements = new Set<HTMLElement>();
+        const addedElements = new Set<HTMLElement>();
+        const updatedElements = new Set<HTMLElement>();
 
         for (const mutation of mutations) {
-          switch (mutation.type) {
-            case "attributes": {
-              if (!(mutation.target instanceof HTMLElement)) continue;
-              const element = mutation.target;
-              updatedElements.push(element);
-              break;
+          if (mutation.type === "attributes") {
+            if (mutation.target instanceof HTMLElement) {
+              updatedElements.add(mutation.target);
             }
-            case "childList": {
-              addedElements.push(...collectElements(mutation.addedNodes));
-              removedElements.push(...collectElements(mutation.removedNodes));
-              break;
-            }
-            default:
-              break;
+          } else if (mutation.type === "childList") {
+            collectElements(mutation.addedNodes, addedElements);
+            collectElements(mutation.removedNodes, removedElements);
           }
         }
 
-        for (const element of removedElements) {
-          removeAnimation(element);
-        }
-
-        for (const element of addedElements) {
-          addAnimation(element);
-        }
-
-        for (const element of updatedElements) {
-          updateAnimation(element);
-        }
+        // 移除優先於新增，避免重複初始化
+        removedElements.forEach(removeAnimation);
+        addedElements.forEach(addAnimation);
+        updatedElements.forEach(updateAnimation);
       });
 
       // 初始化
@@ -160,14 +146,12 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
 }
 
 /** 搜尋 [data-aos] 變動元素 */
-function collectElements(nodes: NodeList) {
-  const elements: HTMLElement[] = [];
-
+function collectElements(nodes: NodeList, result: Set<HTMLElement>) {
   for (const node of nodes) {
     if (!(node instanceof HTMLElement)) continue;
-    if (node.matches(AOS_SELECTORS)) elements.push(node);
-    elements.push(...node.querySelectorAll<HTMLElement>(AOS_SELECTORS));
+    if (node.matches(AOS_SELECTORS)) result.add(node);
+    node
+      .querySelectorAll<HTMLElement>(AOS_SELECTORS)
+      .forEach((el) => result.add(el));
   }
-
-  return elements;
 }

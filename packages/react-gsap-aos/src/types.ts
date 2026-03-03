@@ -23,7 +23,7 @@ export interface AnimationOptions {
    *
    * @default "none"
    *
-   * @see {@link https://gsap.com/docs/v3/Eases|GSAP 文件}
+   * @see https://gsap.com/docs/v3/Eases
    */
   easing: Easing;
   /**
@@ -43,7 +43,7 @@ export interface AnimationOptions {
    *
    * @default "top-bottom"
    *
-   * @see {@link https://gsap.com/docs/v3/Plugins/ScrollTrigger/#start|GSAP 文件}
+   * @see https://gsap.com/docs/v3/Plugins/ScrollTrigger/#start
    */
   anchorPlacement: AnchorPlacement;
 }
