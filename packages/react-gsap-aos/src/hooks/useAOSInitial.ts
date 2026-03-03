@@ -63,38 +63,37 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
     (_, contextSafe) => {
       if (!containerRef.current || !contextSafe) return;
 
+      /** 新增動畫 */
+      const addAnimation = (element: HTMLElement) => {
+        if (animationsWeakMap.current.has(element)) return;
+
+        const newAnimation = contextSafe(createAnimation)(
+          element,
+          optionsRef.current,
+        );
+        if (!newAnimation) return;
+
+        animationsWeakMap.current.set(element, newAnimation);
+      };
+
       /** 移除動畫 */
       const removeAnimation = (element: HTMLElement) => {
         const animation = animationsWeakMap.current.get(element);
         if (!animation) return;
 
         animation.kill();
+        animation.revert();
         animationsWeakMap.current.delete(element);
-      };
-
-      /** 新增動畫 */
-      const addAnimation = (element: HTMLElement) => {
-        const newAnimation = createAnimation(element, optionsRef.current);
-        if (!newAnimation) return;
-
-        animationsWeakMap.current.set(element, newAnimation);
       };
 
       /** 更新動畫 */
       const updateAnimation = (element: HTMLElement) => {
-        const prevAnimation = animationsWeakMap.current.get(element);
-        if (prevAnimation) {
-          prevAnimation.kill();
-          animationsWeakMap.current.delete(element);
-          // TODO 回朔動畫，目前這樣寫才會功能正常，需要找更好的方案
-          gsap.set(element, prevAnimation.vars).kill();
-        }
-
+        removeAnimation(element);
         addAnimation(element);
       };
 
       /** 監聽元素變化 */
-      const handleMutation: MutationCallback = contextSafe((mutations) => {
+      const handleMutation: MutationCallback = (mutations) => {
         const removedElements = new Set<HTMLElement>();
         const addedElements = new Set<HTMLElement>();
         const updatedElements = new Set<HTMLElement>();
@@ -114,7 +113,7 @@ export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
         removedElements.forEach(removeAnimation);
         addedElements.forEach(addAnimation);
         updatedElements.forEach(updateAnimation);
-      });
+      };
 
       // 初始化
       for (const element of gsap.utils.toArray<HTMLElement>(
