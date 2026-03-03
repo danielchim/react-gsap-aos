@@ -1,4 +1,3 @@
-export { anchorPlacements, animations, easings } from "./constants";
 export { default as useAOSInitial } from "./hooks/useAOSInitial";
 export type {
   AnchorPlacement,

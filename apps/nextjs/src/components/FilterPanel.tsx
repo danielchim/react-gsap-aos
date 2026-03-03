@@ -33,7 +33,7 @@ interface FilterPanelProps {
 }
 
 export default function FilterPanel({
-  filter = [],
+  filter,
   animation,
   setAnimation,
   easing,

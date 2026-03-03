@@ -8,6 +8,18 @@
 
 ```bash
 pnpm install
+```
+
+需要先對套件做編譯
+
+```bash
+cd packages/react-gsap-aos
+pnpm build
+```
+
+接著就能夠運行範例網站
+
+```bash
 cd apps/nextjs
 pnpm dev
 ```

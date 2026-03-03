@@ -1,35 +1,36 @@
 import { useState } from "react";
 
-import { type Easing } from "react-gsap-aos";
-import { easings } from "react-gsap-aos/constants";
+import { type Animation } from "react-gsap-aos";
+import { animations } from "react-gsap-aos/constants";
 
-interface EasingFilterProps {
-  value?: Easing;
-  onChangeValue?: (next: Easing) => void;
+interface AnimationFilterProps {
+  value?: Animation;
+  onChangeValue?: (next: Animation) => void;
 }
 
 const categories = Array.from(
-  new Set(easings.map((item) => item.split(".")[0])),
+  new Set(animations.map((item) => item.split("-")[0])),
 );
 
-export default function EasingFilter({
+export default function AnimationFilter({
   value,
   onChangeValue,
-}: EasingFilterProps) {
+}: AnimationFilterProps) {
   const [category, setCategory] = useState(categories[0]);
 
   return (
     <fieldset className="fieldset">
-      <legend className="fieldset-legend">動畫曲線篩選</legend>
+      <legend className="fieldset-legend">動畫篩選</legend>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <select
-          className="select"
+          className="select w-full"
           value={category}
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
             setCategory(nextValue);
             onChangeValue?.(
-              easings.find((item) => item.startsWith(nextValue)) || easings[0],
+              animations.find((item) => item.startsWith(nextValue)) ||
+                animations[0],
             );
           }}
         >
@@ -40,14 +41,13 @@ export default function EasingFilter({
           ))}
         </select>
         <select
-          className="select"
-          disabled={value === "none"}
+          className="select w-full"
           value={value}
           onChange={(event) => {
-            onChangeValue?.(event.currentTarget.value as Easing);
+            onChangeValue?.(event.currentTarget.value as Animation);
           }}
         >
-          {easings
+          {animations
             .filter((item) => item.startsWith(category))
             .map((item) => (
               <option key={item} value={item}>
