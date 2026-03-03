@@ -1,0 +1,277 @@
+# react-gsap-aos
+
+在 React 上使用 GSAP 實現滾動動畫，適用於 Next.js 專案。
+
+動畫樣式參考 [AOS](https://github.com/michalsnik/aos)
+
+## 安裝依賴
+
+```bash
+pnpm install gsap @gsap/react
+```
+
+- [gsap](https://gsap.com/docs/v3/Installation)
+- [@gsap/react](https://gsap.com/resources/React)
+
+## 使用方式
+
+### 綁定父元素
+
+`useAOSInitial` 回傳一個 ref 用來綁定該頁父元素，建議在有動畫的區塊加上 `overflow-hidden` 避免溢出顯示。
+
+> ⚠️ 不要在 `app/layout.tsx` 全域綁定動畫，每個頁面單獨綁定，GSAP 才能離開頁面的時候自動卸載動畫。
+
+```tsx
+"use client";
+
+import { useAOSInitial } from "react-gsap-aos";
+
+export default function Demo() {
+  const { containerRef } = useAOSInitial<HTMLDivElement>();
+
+  return <div ref={containerRef} className="overflow-hidden"></div>;
+}
+```
+
+如果你需要區域調整預設值可以傳入物件：
+
+```tsx
+"use client";
+
+import { useAOSInitial } from "react-gsap-aos";
+
+export default function Demo() {
+  // 這裡會覆蓋掉 easing 和 duration 的預設值，只作用在該區塊
+  const { containerRef } = useAOSInitial<HTMLDivElement>({
+    easing: "bounce",
+    duration: 300,
+  });
+
+  return <div ref={containerRef} className="overflow-hidden"></div>;
+}
+```
+
+> 只會影響新產生的元素，這是有意為之的行為，不鼓勵動態調整此處設定值
+
+### 動畫定位容器
+
+當元素被定義時 ScrollTrigger 會將動畫觸發點定義在偏移後的位置，這會導致動畫錨點不在預期位置，穩定簡單的解決方案就是用定位容器將其包覆：
+
+```tsx
+"use client";
+
+import { useAOSInitial } from "react-gsap-aos";
+
+export default function Demo() {
+  const { containerRef } = useAOSInitial<HTMLDivElement>();
+
+  return (
+    <div ref={containerRef} className="overflow-hidden">
+      // ✅ 使用標記 data-aos-container 的容器
+      <div data-aos-container>
+        <div data-aos="fade-up" data-aos-offset="200">
+          Hello AOS
+        </div>
+      </div>
+      // ❌ 外層沒有使用 data-aos-container 的容器，會產生觸發點偏移
+      <div data-aos="fade-up" data-aos-offset="200">
+        Hello AOS
+      </div>
+    </div>
+  );
+}
+```
+
+使用 `data-aos-container` 標記定位容器， react-gsap-aos 會優先尋找上一層容器，如果沒有指定則會優先以動畫元素本身為主，請確保每個容器只對應一個動畫元素。
+
+此外像這樣嵌套是可以正常運作的：
+
+```tsx
+"use client";
+
+import { useAOSInitial } from "react-gsap-aos";
+
+export default function Demo() {
+  const { containerRef } = useAOSInitial<HTMLDivElement>();
+
+  return (
+    <div ref={containerRef} className="overflow-hidden">
+      <div data-aos-container>
+        <div data-aos="fade-up" data-aos-offset="200">
+          Hello AOS
+        </div>
+        // ✅ 這部分可以正常獨立運作
+        <div data-aos-container>
+          <div data-aos="fade-up" data-aos-offset="200">
+            Hello AOS
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### 使用 `data-aos` 屬性
+
+帶有 `data-aos` 前綴屬性的元素會被添加動畫，結尾對應各自的參數。 [型別](#型別)
+
+```tsx
+<div
+  data-aos="fade"
+  data-aos-offset={120}
+  data-aos-delay={0}
+  data-aos-duration={400}
+  data-aos-easing="none"
+  data-aos-mirror={false}
+  data-aos-once={false}
+  data-aos-anchor-placement="top-bottom"
+>
+  Hello AOS
+</div>
+```
+
+### 使用 `toAOSProps`
+
+`toAOSProps` 提供完整型別提示、會過濾無效屬性，幫助你快速生成正確的 AOS 屬性。 [型別](#型別)
+
+```tsx
+"use client";
+
+import { toAOSProps } from "react-gsap-aos";
+
+export default function Demo() {
+  return (
+    <div
+      {...toAOSProps({
+        animation: "fade",
+        offset: 120,
+        delay: 0,
+        duration: 400,
+        easing: "none",
+        once: false,
+        mirror: false,
+        anchorPlacement: "top-bottom",
+      })}
+    >
+      Hello AOS
+    </div>
+  );
+}
+```
+
+### 佈局變化
+
+當頁面佈局改變時（例如元素位置改變、視窗尺寸調整），動畫元素可能還停留在舊的位置。  
+GSAP 預設會在視窗尺寸變化時自動更新動畫位置，詳細說明可參考 [GSAP ScrollTrigger refresh()](<https://gsap.com/docs/v3/Plugins/ScrollTrigger/static.refresh()>)。
+
+如果你動態改變了 DOM，這些變動 **不會自動觸發刷新**，需要手動調用刷新函式：
+
+```tsx
+import { refreshAOS } from "react-gsap-aos";
+
+refreshAOS();
+```
+
+`refreshAOS()` 內部封裝了 `ScrollTrigger.refresh(true)`，在大部分情況下可以安全刷新動畫位置。
+
+## 型別
+
+### 屬性選項
+
+| 名稱            | 型別                                  | 對應 `data-aos`             | 預設值         | 說明                           |
+| --------------- | ------------------------------------- | --------------------------- | -------------- | ------------------------------ |
+| animation       | [`Animation`](#animation)             | `data-aos`                  | `undefined`    | 動畫類型                       |
+| offset          | `number`                              | `data-aos-offset`           | `120`          | 提前觸發動畫的距離 (px)        |
+| delay           | `number`                              | `data-aos-delay`            | `0`            | 動畫延遲時間 (ms)              |
+| duration        | `number`                              | `data-aos-duration`         | `400`          | 動畫持續時間 (ms)              |
+| easing          | [`Easing`](#easing)                   | `data-aos-easing`           | `"none"`       | 緩動曲線                       |
+| once            | `boolean`                             | `data-aos-once`             | `false`        | 是否只執行一次                 |
+| mirror          | `boolean`                             | `data-aos-mirror`           | `false`        | 滾動過元素後，動畫是否反向播放 |
+| anchorPlacement | [`AnchorPlacement`](#anchorplacement) | `data-aos-anchor-placement` | `"top-bottom"` | 元素在視窗的指定位置觸發動畫   |
+
+### Animation
+
+- fade
+- fade-up
+- fade-down
+- fade-left
+- fade-right
+- fade-up-right
+- fade-up-left
+- fade-down-right
+- fade-down-left
+- flip-up
+- flip-down
+- flip-left
+- flip-right
+- slide-up
+- slide-down
+- slide-left
+- slide-right
+- zoom-in
+- zoom-in-up
+- zoom-in-down
+- zoom-in-left
+- zoom-in-right
+- zoom-out
+- zoom-out-up
+- zoom-out-down
+- zoom-out-left
+- zoom-out-right
+
+### Easing
+
+- none
+- power1
+- power1.in
+- power1.out
+- power1.inOut
+- power2
+- power2.in
+- power2.out
+- power2.inOut
+- power3
+- power3.in
+- power3.out
+- power3.inOut
+- power4
+- power4.in
+- power4.out
+- power4.inOut
+- back
+- back.in
+- back.out
+- back.inOut
+- bounce
+- bounce.in
+- bounce.out
+- bounce.inOut
+- circ
+- circ.in
+- circ.out
+- circ.inOut
+- elastic
+- elastic.in
+- elastic.out
+- elastic.inOut
+- expo
+- expo.in
+- expo.out
+- expo.inOut
+- sine
+- sine.in
+- sine.out
+- sine.inOu
+
+## AnchorPlacement
+
+- top-bottom
+- top-center
+- top-top
+- center-bottom
+- center-center
+- center-top
+- bottom-bottom
+- bottom-center
+- bottom-top
