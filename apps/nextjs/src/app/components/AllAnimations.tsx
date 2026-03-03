@@ -9,7 +9,7 @@ import ColorBox from "@/components/ColorBox";
 
 export default function AllAnimations() {
   return (
-    <section className="grid gap-[inherit]">
+    <section className="grid gap-4">
       <FilterPanel filter={["easing"]} />
       <Items />
     </section>
@@ -19,7 +19,7 @@ export default function AllAnimations() {
 function Items() {
   const easing = useAtomValue(easingAtom);
   return (
-    <ul className="flex flex-col gap-4 overflow-hidden">
+    <ul className="flex flex-col gap-[inherit] overflow-hidden">
       {animations.map((item, index) => (
         <li key={item} data-aos-container>
           <ColorBox index={index} {...toAOSProps({ animation: item, easing })}>

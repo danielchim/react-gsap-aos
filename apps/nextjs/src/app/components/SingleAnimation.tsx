@@ -10,7 +10,7 @@ const list = Array(20).fill(null);
 
 export default function SingleAnimation() {
   return (
-    <section className="grid gap-[inherit]">
+    <section className="grid gap-4">
       <FilterPanel />
       <Items />
     </section>
@@ -22,7 +22,7 @@ function Items() {
   const animation = useAtomValue(animationAtom);
 
   return (
-    <ul className="flex flex-col gap-4 overflow-hidden">
+    <ul className="flex flex-col gap-[inherit] overflow-hidden">
       {list.map((_, index) => (
         <li key={index} data-aos-container>
           <ColorBox index={index} {...toAOSProps({ animation, easing })}>

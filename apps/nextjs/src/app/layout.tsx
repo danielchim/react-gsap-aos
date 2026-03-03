@@ -1,7 +1,18 @@
 import "./globals.css";
 
+import type { Metadata } from "next";
+
 import { noto_sans_tc, noto_serif_tc, noto_sans_mono } from "@/libs/fonts";
 import clsx from "clsx";
+
+export const metadata: Metadata = {
+  title: {
+    default: "React GSAP AOS",
+    template: "%s | React GSAP AOS",
+  },
+  description:
+    "A lightweight GSAP + ScrollTrigger integration, similar in usage to AOS, specifically designed for React / Next.js.",
+};
 
 export default function RootLayout({
   children,

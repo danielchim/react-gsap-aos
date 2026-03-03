@@ -34,11 +34,8 @@ export default function Demo() {
   const [tabIndex, setTabIndex] = useState(0);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative flex flex-col gap-4 py-4 *:px-4"
-    >
-      <div className="flex items-center gap-2">
+    <div ref={containerRef} className="relative flex flex-col pb-4 *:px-4">
+      <div className="sticky top-0 z-10 flex items-center gap-2 p-4 backdrop-blur-md">
         <div role="tablist" className="tabs tabs-box grow">
           {tabs.map((item, index) => (
             <button
@@ -47,6 +44,7 @@ export default function Demo() {
               type="button"
               onClick={() => {
                 setTabIndex(index);
+                window.scrollTo({ top: 0, behavior: "smooth" });
               }}
               className={cn("tab", { "tab-active": tabIndex === index })}
             >

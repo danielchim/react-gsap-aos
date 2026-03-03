@@ -6,7 +6,7 @@ export default memo(function GithubButton() {
       href="https://github.com/GaiaYang/react-gsap-aos/tree/main/packages/react-gsap-aos"
       target="_blank"
       rel="noopener noreferrer nofollow"
-      className="btn btn-square btn-ghost btn-lg"
+      className="btn btn-square btn-lg"
     >
       <svg
         aria-hidden
