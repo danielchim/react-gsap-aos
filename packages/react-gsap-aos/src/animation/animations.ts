@@ -13,18 +13,25 @@ export type CreateAnimationFunction = (
   options?: Partial<AnimationOptions>,
 ) => gsap.core.Tween;
 
-/** 計算 ScrollTrigger 的 start */
-function scrollTriggerStart(
+/** 解析 ScrollTrigger 的 `start` */
+function resolveScrollTriggerStart(
   anchorPlacement: AnchorPlacement,
   offset: number,
 ): string {
   const [v1, v2] = anchorPlacement.split("-");
   const anchor = `${v1} ${v2}`;
 
-  if (offset === 0 || Number.isNaN(offset)) return anchor;
+  if (offset === 0 || !Number.isFinite(offset)) return anchor;
 
   const fix = `${offset > 0 ? "-" : "+"}=${Math.abs(offset)}`;
   return `${anchor}${fix}`;
+}
+
+/** 解析 ScrollTrigger 的 `toggleActions` */
+function resolveToggleActions(once?: boolean, mirror?: boolean): string {
+  if (once) return "play none none none";
+  if (mirror) return "play reverse play reverse";
+  return "play none none reverse";
 }
 
 /** 建立 ScrollTrigger 動畫 */
@@ -59,11 +66,8 @@ function createScrollTriggerTween(
       scrollTrigger: {
         // markers: true,
         trigger: container || element,
-        toggleActions: mirror
-          ? "play reverse play reverse"
-          : "play none none reverse",
-        once,
-        start: scrollTriggerStart(anchorPlacement, offset),
+        toggleActions: resolveToggleActions(once, mirror),
+        start: resolveScrollTriggerStart(anchorPlacement, offset),
       },
     },
   );
