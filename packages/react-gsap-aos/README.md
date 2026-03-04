@@ -2,9 +2,18 @@
 
 輕量的 GSAP + ScrollTrigger 整合，用法類似 AOS，專為 React / Next.js 設計。
 
-動畫樣式參考： https://github.com/michalsnik/aos
+動畫樣式參考： [AOS](https://github.com/michalsnik/aos)
 
-## 快速安裝
+## 功能
+
+- 基於 GSAP + ScrollTrigger 的捲動觸發動畫
+- API 模仿 AOS，易於 React / Next.js 使用
+- 支援 data-aos 屬性與函式轉換
+- 可在多個區塊平行使用，避免互相干擾
+- TypeScript 完整支援，包含動畫/緩動/錨點型別
+- 輕量且 SSR 友善，具備卸載清理機制
+
+## 安裝
 
 ```bash
 pnpm install react-gsap-aos gsap @gsap/react
@@ -23,108 +32,128 @@ pnpm install react-gsap-aos gsap @gsap/react
 
 ## 快速開始
 
-1. Next.js / SSR 請在頂層加入 `"use client"`
-2. 在需要動畫的頁面或元件中呼叫 `useAOSInitial`，並將回傳的 `containerRef` 綁定到最外層容器。
+```tsx
+import { AOSProvider } from "react-gsap-aos/client";
 
-> ⚠️ 不建議在 `app/layout.tsx` 綁定動畫，因為 GSAP 應在頁面卸載時正確清理；建議在每個頁面的區塊綁定。
+export default function Demo() {
+  return (
+    <AOSProvider className="overflow-hidden">
+      <div data-aos-container>
+        <div data-aos="fade-up" data-aos-offset="200">
+          Hello AOS
+        </div>
+      </div>
+    </AOSProvider>
+  );
+}
+```
+
+## 用法
+
+### 設置 `AOSProvider`
+
+只要把 `AOSProvider` 包覆在需要動畫的區塊外層，
+元件內的所有子元素就會自動被監聽與啟動動畫。
 
 > `"overflow-hidden"` 樣式是解決動畫元素起始階段溢出問題。
 
 ```tsx
-"use client";
-
-import { useAOSInitial } from "react-gsap-aos";
+import { AOSProvider } from "react-gsap-aos/client";
 
 export default function Demo() {
-  const { containerRef } = useAOSInitial<HTMLDivElement>();
-
   return (
-    <div ref={containerRef} className="overflow-hidden">
-      {/* 動畫區塊 */}
-    </div>
+    <AOSProvider className="overflow-hidden">{/* 動畫區塊 */}</AOSProvider>
   );
 }
 ```
 
-`useAOSInitial` 只會監聽並影響綁定元素下的所有標記為動畫的子元素，要注意的是不要嵌套使用 `useAOSInitial`：
+> ⚠️ 不要巢狀使用 `AOSProvider`，會造成重複監聽與多餘動畫。
 
 ```tsx
-function Demo() {
-  const { containerRef } = useAOSInitial<HTMLDivElement>();
+import { AOSProvider } from "react-gsap-aos/client";
 
+export default function Demo() {
   return (
-    <div ref={containerRef} className="overflow-hidden">
-      {/* ❌ 不要嵌套使用 useAOSInitial */}
-      <Box />
-    </div>
-  );
-}
-
-function Box() {
-  const { containerRef } = useAOSInitial<HTMLDivElement>();
-
-  return (
-    <div ref={containerRef} className="overflow-hidden">
-      {/* 動畫區塊 */}
-    </div>
+    <AOSProvider>
+      {/* ❌ 會導致重複監聽元素以及創建動畫 */}
+      <AOSProvider />
+    </AOSProvider>
   );
 }
 ```
 
-如果有區塊需求可以並行使用：
+`AOSProvider` 是呼叫 `useAOSScope` hook 的包裝元件，大部分情況下使用此組件即可；
+
+如果你需要更細緻的控制，可以改用 [`useAOSScope`](#useaosscope)。
+
+此外該組件提供了兩個屬性供調整：
+
+- `component`：渲染的容器元素，預設為 `'div'`。
+- `options`：與 `toAOSProps` 同樣結構的默認動畫參數，會應用於該範圍內的所有新動畫元素。
 
 ```tsx
-function Demo() {
-  return (
-    <div>
-      {/* ✅ 並行使用互不影響 */}
-      <Box />
-      <Box2 />
-    </div>
-  );
-}
-
-function Box() {
-  const { containerRef } = useAOSInitial<HTMLDivElement>();
-
-  return (
-    <div ref={containerRef} className="overflow-hidden">
-      {/* 動畫區塊 */}
-    </div>
-  );
-}
-
-function Box2() {
-  const { containerRef } = useAOSInitial<HTMLDivElement>();
-
-  return (
-    <div ref={containerRef} className="overflow-hidden">
-      {/* 動畫區塊 */}
-    </div>
-  );
-}
+<AOSProvider
+  component="section"
+  options={{
+    animation: "fade",
+    offset: 120,
+    delay: 0,
+    duration: 400,
+    easing: "none",
+    once: false,
+    mirror: false,
+    anchorPlacement: "top-bottom",
+  }}
+></AOSProvider>
 ```
 
-## 區塊預設值
+### 使用 data attributes 設定動畫
 
-若要在區塊層級覆蓋預設設定，可傳入選項：
+透過帶有 `data-aos-*` 開頭的屬性來調整行為
 
 ```tsx
-const { containerRef } = useAOSInitial<HTMLDivElement>({
-  easing: "bounce",
-  duration: 300,
-});
+<div
+  data-aos="fade"
+  data-aos-offset={120}
+  data-aos-delay={0}
+  data-aos-duration={400}
+  data-aos-easing="none"
+  data-aos-mirror={false}
+  data-aos-once={false}
+  data-aos-anchor-placement="top-bottom"
+>
+  Hello AOS
+</div>
 ```
 
-> 此設定只會應用於該容器中新產生的動畫元素，不建議頻繁動態變更此項設定。
+### 使用 `toAOSProps` 設定動畫
 
-## 容器定位 data-aos-container
+該函式提供完整型別且會過濾無效的屬性值後轉換成 data attributes
 
-為了避免 ScrollTrigger 計算偏移時造成觸發點不正確，請在需要的父容器上加上 `data-aos-container`：
+```tsx
+<div
+  {...toAOSProps({
+    animation: "fade",
+    offset: 120,
+    delay: 0,
+    duration: 400,
+    easing: "none",
+    once: false,
+    mirror: false,
+    anchorPlacement: "top-bottom",
+  })}
+>
+  Hello AOS
+</div>
+```
+
+### 容器定位 data-aos-container
+
+為了避免 ScrollTrigger 計算偏移時造成觸發點不正確，請在需要的父容器加上 `data-aos-container`：
 
 ```tsx
 return (
-  <div ref={containerRef} className="overflow-hidden">
+  <AOSProvider className="overflow-hidden">
     {/* ✅ 指定定位容器 */}
     <div data-aos-container>
       <div data-aos="fade-up" data-aos-offset="200">
@@ -136,7 +165,7 @@ return (
     <div data-aos="fade-up" data-aos-offset="200">
       Hello AOS
     </div>
-  </div>
+  </AOSProvider>
 );
 ```
 
@@ -157,51 +186,85 @@ return (
 </div>
 ```
 
-## 使用`data-aos`屬性
+## API
 
-直接在元素上使用 `data-aos` 與相關屬性。
+### `useAOSScope`
 
-```tsx
-<div
-  data-aos="fade"
-  data-aos-offset={120}
-  data-aos-delay={0}
-  data-aos-duration={400}
-  data-aos-easing="none"
-  data-aos-mirror={false}
-  data-aos-once={false}
-  data-aos-anchor-placement="top-bottom"
->
-  Hello AOS
-</div>
-```
+這個 hook 是整個套件的核心，負責監聽子元素 `data-aos-*` 屬性來創建、修改動畫並且會在離開頁面時卸載動畫，`AOSProvider` 是它的輕量包裝元件，通常你只需使用 `AOSProvider`。
 
-## 使用 `toAOSProps` 函式
+若你想在函式元件中直接掌握 container ref，就可以直接使用此 hook。
 
-取得經過型別檢查與過濾的屬性物件。
+1. Next.js / SSR 專案在使用此 hook 的檔案最上方加上 `"use client"`。
+2. 呼叫後把回傳的 `containerRef` 綁定到最外層容器。
+
+> ⚠️ 建議綁定在頁面或元件的區塊層級，不要放在 `app/layout.tsx`，以便 GSAP 在組件卸載時能正確清理。
 
 ```tsx
-<div
-  {...toAOSProps({
-    animation: "fade",
-    offset: 120,
-    delay: 0,
-    duration: 400,
-    easing: "none",
-    once: false,
-    mirror: false,
-    anchorPlacement: "top-bottom",
-  })}
->
-  Hello AOS
-</div>
+"use client";
+
+import { useAOSScope } from "react-gsap-aos/client";
+
+export default function Demo() {
+  const { containerRef } = useAOSScope<HTMLDivElement>();
+
+  return (
+    <div ref={containerRef} className="overflow-hidden">
+      {/* 動畫區塊 */}
+    </div>
+  );
+}
 ```
+
+不要巢狀呼叫 `useAOSScope`，但是你可以像下面這樣平行使用。
+
+```tsx
+function Demo() {
+  return (
+    <div>
+      {/* ✅ 平行使用互不干涉 */}
+      <Box />
+      <Box2 />
+    </div>
+  );
+}
+
+function Box() {
+  const { containerRef } = useAOSScope<HTMLDivElement>();
+  return (
+    <div ref={containerRef} className="overflow-hidden">
+      …
+    </div>
+  );
+}
+
+function Box2() {
+  const { containerRef } = useAOSScope<HTMLDivElement>();
+  return (
+    <div ref={containerRef} className="overflow-hidden">
+      …
+    </div>
+  );
+}
+```
+
+若要在區塊層級覆蓋預設設定，可傳入選項：
+
+```tsx
+const { containerRef } = useAOSScope<HTMLDivElement>({
+  easing: "bounce",
+  duration: 300,
+});
+```
+
+> 此設定只會應用於該容器中新產生的動畫元素，不建議頻繁動態變更此項設定。
 
 ## 刷新動畫位置
 
 若動態修改 DOM（插入/移除元素或修改佈局），請手動呼叫：
 
 ```ts
+"use client";
+
 import { refreshAOS } from "react-gsap-aos";
 
 refreshAOS();
@@ -213,17 +276,17 @@ refreshAOS();
 
 ### 動態 DOM 範例
 
-以下範例示範在動態新增列表項目時，如何呼叫 `refreshAOS()` ：
+以下範例示範在動態增減元素導致佈局變動時，如何呼叫 `refreshAOS()` ：
 
 ```tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAOSInitial, refreshAOS } from "react-gsap-aos";
+import { useAOSScope, refreshAOS } from "react-gsap-aos";
 
 export default function DynamicList() {
-  const { containerRef } = useAOSInitial<HTMLDivElement>();
-  const [show, setShow] = useState(boolean);
+  const { containerRef } = useAOSScope<HTMLDivElement>();
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     // 當 show 變動時，刷新 ScrollTrigger
@@ -331,7 +394,7 @@ export default function DynamicList() {
 - sine
 - sine.in
 - sine.out
-- sine.inOu
+- sine.inOut
 
 ## AnchorPlacement
 

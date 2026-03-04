@@ -1,4 +1,3 @@
-export { default as useAOSInitial } from "./hooks/useAOSInitial";
 export type {
   AnchorPlacement,
   Animation,

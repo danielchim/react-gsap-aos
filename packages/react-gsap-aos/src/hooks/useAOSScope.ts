@@ -23,16 +23,16 @@ const AOS_ATTRIBUTE_KEYS: (AOSAttributeKey | "data-aos")[] = [
 const AOS_SELECTORS = "[data-aos]";
 
 /**
- * 初始化 AOS 動畫
+ * 綁定 AOS 動畫範圍
  * 
  * @example
  * ```tsx
   "use client";
 
-  import {useAOSInitial} from '@/aos';
+  import {useAOSScope} from '@/aos';
  
   export default function Demo() {
-    const {containerRef} = useAOSInitial<HTMLDivElement>()
+    const {containerRef} = useAOSScope<HTMLDivElement>()
     return (
       <div ref={containerRef} className="overflow-hidden">
         <div data-aos-container>
@@ -43,7 +43,7 @@ const AOS_SELECTORS = "[data-aos]";
   }
  * ```
  */
-export default function useAOSInitial<E extends HTMLElement = HTMLElement>(
+export default function useAOSScope<E extends HTMLElement = HTMLElement>(
   options?: Partial<AnimationOptions>,
 ) {
   const containerRef = useRef<E | null>(null);

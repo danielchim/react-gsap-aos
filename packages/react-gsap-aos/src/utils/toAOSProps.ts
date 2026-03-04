@@ -5,7 +5,7 @@ interface AOSDataAttributes extends Partial<Record<AOSAttributeKey, string>> {
   "data-aos": Animation;
 }
 
-interface AOSAttributeOptions extends Partial<AnimationOptions> {
+export interface AOSAttributeOptions extends Partial<AnimationOptions> {
   animation: Animation;
 }
 
