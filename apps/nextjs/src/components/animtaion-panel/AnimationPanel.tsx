@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import cn from "@/utils/cn";
 
@@ -7,6 +7,7 @@ import EasingFilter from "./EasingFilter";
 import AnchorPlacementFilter from "./AnchorPlacementFilter";
 import OtherOptions from "./OtherOptions";
 import DevTool from "./DevTool";
+import { refreshAOS } from "react-gsap-aos";
 
 type FilterType = "animation" | "easing" | "anchor-placement";
 
@@ -44,6 +45,11 @@ export default function AnimationPanel({ filter }: FilterPanelProps) {
     return true;
   });
   const tabValue = _tabs[tabIndex]?.value ?? _tabs[0].value;
+
+  useEffect(() => {
+    // 選項卡切換造成佈局變化
+    refreshAOS();
+  }, [tabValue]);
 
   function renderTab(item: Tab) {
     return (
