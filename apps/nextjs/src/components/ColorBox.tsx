@@ -14,7 +14,7 @@ export default function ColorBox({ index, ...props }: ColorBoxProps) {
     <div
       {...props}
       className={cn(
-        "flex h-60 items-center justify-center rounded-lg",
+        "relative flex h-60 items-center justify-center rounded-lg",
         bgColors[typeof index === "number" ? index : 0],
         "text-2xl font-semibold text-white",
         props.className,

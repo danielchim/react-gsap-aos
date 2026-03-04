@@ -6,6 +6,8 @@ import { animations } from "react-gsap-aos/constants";
 
 import useDynamicOptions from "./useDynamicOptions";
 
+import AnchorPlacementMarker from "@/components/animtaion-panel/AnchorPlacementMarker";
+
 const contents: React.ReactNode[] = [
   <p key={0}>
     Until now, trying to style an article, document, or blog post with Tailwind
@@ -227,21 +229,23 @@ export default function Typography() {
 
   function renderContent(item: React.ReactNode, index: number) {
     return (
-      <div
-        key={index}
-        {...toAOSProps({
-          ...options,
-          animation: animations[index % length],
-        })}
-      >
-        {item}
+      <div key={index} data-aos-container className="relative">
+        <AnchorPlacementMarker />
+        <div
+          {...toAOSProps({
+            ...options,
+            animation: animations[index % length],
+          })}
+        >
+          {item}
+        </div>
       </div>
     );
   }
 
   return (
-    <section>
-      <article className="prose dark:prose-invert mx-auto overflow-hidden pb-24">
+    <section className="overflow-hidden">
+      <article className="prose dark:prose-invert mx-auto pb-24">
         {contents.map(renderContent)}
       </article>
     </section>

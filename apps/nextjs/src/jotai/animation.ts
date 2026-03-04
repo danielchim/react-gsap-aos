@@ -12,7 +12,9 @@ export const mirrorAtom = atomWithReset<AnimationOptions["mirror"]>(false);
 export const anchorPlacementAtom =
   atomWithReset<AnimationOptions["anchorPlacement"]>("top-bottom");
 
+// 測試用狀態
 /** 是否顯示錨點標記 */
 export const visibleAnchorAtom = atomWithReset<boolean>(false);
-
-export const commonStore = createStore();
+/** 是否顯示偏移標記 */
+export const visibleOffsetAtom = atomWithReset<boolean>(false);
+export const devToolStore = createStore();

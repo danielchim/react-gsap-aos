@@ -21,9 +21,9 @@ export default function TwoLevelSelect<T extends string>({
   return (
     <fieldset className="fieldset">
       <legend className="fieldset-legend">{label}</legend>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="flex flex-wrap gap-3">
         <select
-          className="select w-full"
+          className="select"
           value={category}
           onChange={(event) => {
             const nextValue = event.currentTarget.value;
@@ -40,7 +40,7 @@ export default function TwoLevelSelect<T extends string>({
           ))}
         </select>
         <select
-          className="select w-full"
+          className="select"
           disabled={filtered.length === 1}
           value={value}
           onChange={(event) => {

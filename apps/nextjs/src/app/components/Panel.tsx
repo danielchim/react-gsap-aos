@@ -4,12 +4,12 @@ import { Provider, useAtomValue } from "jotai";
 
 import { tabIndexAtom } from "@/jotai/demo";
 
-import AnchorMarker from "./AnchorMarker";
 import AllAnimations from "./AllAnimations";
 import SingleAnimation from "./SingleAnimation";
 import Typography from "./Typography";
 
-import FilterPanel from "@/components/FilterPanel";
+import AnimationPanel from "@/components/animtaion-panel/AnimationPanel";
+import OffsetMarker from "@/components/animtaion-panel/OffsetMarker";
 
 export default function Panel() {
   const index = useAtomValue(tabIndexAtom);
@@ -21,25 +21,31 @@ export default function Panel() {
           case 0:
             return (
               <Provider>
-                <FilterPanel key={0} filter={["easing", "anchor-placement"]} />
+                <AnimationPanel
+                  key={0}
+                  filter={["easing", "anchor-placement"]}
+                />
                 <AllAnimations />
-                <AnchorMarker />
+                <OffsetMarker />
               </Provider>
             );
           case 1:
             return (
               <Provider>
-                <FilterPanel key={1} />
+                <AnimationPanel key={1} />
                 <SingleAnimation />
-                <AnchorMarker />
+                <OffsetMarker />
               </Provider>
             );
           case 2:
             return (
               <Provider>
-                <FilterPanel key={2} filter={["easing", "anchor-placement"]} />
+                <AnimationPanel
+                  key={2}
+                  filter={["easing", "anchor-placement"]}
+                />
                 <Typography />
-                <AnchorMarker />
+                <OffsetMarker />
               </Provider>
             );
           default:

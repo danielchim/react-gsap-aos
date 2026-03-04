@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { animations } from "react-gsap-aos/constants";
 
 import { animationAtom } from "@/jotai/animation";
-import TwoLevelSelect from "./TwoLevelSelect";
+import TwoLevelSelect from "@/components/form/TwoLevelSelect";
 
 const categories = Array.from(
   new Set(animations.map((item) => item.split("-")[0])),
