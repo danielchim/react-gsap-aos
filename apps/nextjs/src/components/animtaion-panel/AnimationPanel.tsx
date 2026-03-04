@@ -43,17 +43,18 @@ export default function AnimationPanel({ filter }: FilterPanelProps) {
 
     return true;
   });
+  const tabValue = _tabs[tabIndex]?.value ?? _tabs[0].value;
 
-  function renderTab(item: Tab, index: number) {
+  function renderTab(item: Tab) {
     return (
       <button
         key={item.value}
         role="tab"
         type="button"
         onClick={() => {
-          setTabIndex(index);
+          setTabIndex(_tabs.findIndex((i) => i.value === item.value));
         }}
-        className={cn("tab", { "tab-active": tabIndex === index })}
+        className={cn("tab", { "tab-active": tabValue === item.value })}
       >
         {item.label}
       </button>
@@ -61,7 +62,7 @@ export default function AnimationPanel({ filter }: FilterPanelProps) {
   }
 
   function renderPanel() {
-    switch (_tabs[tabIndex].value) {
+    switch (tabValue) {
       case "animation":
         return <AnimationFilter />;
       case "easing":

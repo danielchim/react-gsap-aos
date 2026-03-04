@@ -1,13 +1,22 @@
 "use client";
 
-import { useAtomValue } from "jotai";
+import { atom, useAtomValue } from "jotai";
 
-import { devToolStore, offsetAtom, visibleOffsetAtom } from "@/jotai/animation";
+import {
+  anchorPlacementAtom,
+  devToolStore,
+  offsetAtom,
+  visibleOffsetAtom,
+} from "@/jotai/animation";
+import cn from "@/utils/cn";
 
 const atomOptions = { store: devToolStore };
 
+const anchorAtom = atom((get) => get(anchorPlacementAtom).split("-")[1]);
+
 export default function OffsetMarker() {
   const offset = useAtomValue(offsetAtom);
+  const anchor = useAtomValue(anchorAtom);
   const visible = useAtomValue(visibleOffsetAtom, atomOptions);
 
   if (!visible) {
@@ -16,7 +25,21 @@ export default function OffsetMarker() {
 
   return (
     <div
-      className="bg-primary fixed bottom-0 left-0 flex h-px flex-col justify-end"
+      className={cn(
+        "bg-primary pointer-events-none fixed left-0 flex h-px flex-col justify-end",
+        (() => {
+          switch (anchor) {
+            case "top":
+              return "top-0";
+            case "center":
+              return "top-1/2 -translate-y-1/2";
+            case "bottom":
+              return "bottom-0";
+            default:
+              break;
+          }
+        })(),
+      )}
       style={{
         transform: `translateY(${-offset}px)`,
       }}

@@ -15,7 +15,9 @@ export default function TwoLevelSelect<T extends string>({
   value,
   onChangeValue,
 }: TwoLevelSelectProps<T>) {
-  const [category, setCategory] = useState(categories[0]);
+  const [category, setCategory] = useState(
+    categories.find((item) => value.startsWith(item)) || categories[0],
+  );
   const filtered = enums.filter((item) => item.startsWith(category));
 
   return (
