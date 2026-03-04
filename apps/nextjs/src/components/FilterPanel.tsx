@@ -4,23 +4,21 @@ import cn from "@/utils/cn";
 
 import AnimationFilter from "./AnimationFilter";
 import EasingFilter from "./EasingFilter";
+import AnchorPlacement from "./AnchorPlacement";
+import OtherFilter from "./OtherFilter";
 
-type FilterType = "animation" | "easing";
+type FilterType = "animation" | "easing" | "anchor-placement";
 
 interface Tab {
-  value: FilterType;
+  value: string;
   label: string;
 }
 
 const tabs: Tab[] = [
-  {
-    value: "animation",
-    label: "動畫類型",
-  },
-  {
-    value: "easing",
-    label: "動畫曲線",
-  },
+  { value: "animation", label: "動畫類型" },
+  { value: "easing", label: "動畫曲線" },
+  { value: "anchor-placement", label: "動畫錨點" },
+  { value: "other", label: "其他" },
 ] satisfies readonly Tab[];
 
 interface FilterPanelProps {
@@ -30,9 +28,17 @@ interface FilterPanelProps {
 export default function FilterPanel({ filter }: FilterPanelProps) {
   const [tabIndex, setTabIndex] = useState(0);
   const _tabs = tabs.filter((item) => {
-    if (Array.isArray(filter) && filter.length > 0) {
-      return filter.includes(item.value);
+    if (item.value === "other") {
+      return true;
     }
+
+    if (Array.isArray(filter)) {
+      if (filter.length > 0) {
+        return filter.includes(item.value as FilterType);
+      }
+      return false;
+    }
+
     return true;
   });
 
@@ -58,6 +64,10 @@ export default function FilterPanel({ filter }: FilterPanelProps) {
         return <AnimationFilter />;
       case "easing":
         return <EasingFilter />;
+      case "anchor-placement":
+        return <AnchorPlacement />;
+      case "other":
+        return <OtherFilter />;
       default:
         break;
     }

@@ -1,34 +1,22 @@
 "use client";
 
-import { useAtomValue } from "jotai";
 import { toAOSProps } from "react-gsap-aos";
 
-import { animationAtom, easingAtom } from "@/jotai/animation";
+import useDynamicOptions from "./useDynamicOptions";
 
-import FilterPanel from "@/components/FilterPanel";
 import ColorBox from "@/components/ColorBox";
 
 const list = Array(20).fill(null);
 
 export default function SingleAnimation() {
-  return (
-    <section className="grid gap-4">
-      <FilterPanel />
-      <Items />
-    </section>
-  );
-}
-
-function Items() {
-  const easing = useAtomValue(easingAtom);
-  const animation = useAtomValue(animationAtom);
+  const options = useDynamicOptions();
 
   return (
-    <ul className="flex flex-col gap-[inherit] overflow-hidden">
+    <ul className="mx-auto flex w-full max-w-7xl flex-col gap-[inherit]">
       {list.map((_, index) => (
         <li key={index} data-aos-container>
-          <ColorBox index={index} {...toAOSProps({ animation, easing })}>
-            <span>{animation.replace(/\-/g, " ")}</span>
+          <ColorBox index={index} {...toAOSProps(options)}>
+            <span>{options.animation.replace(/\-/g, " ")}</span>
           </ColorBox>
         </li>
       ))}

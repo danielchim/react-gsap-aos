@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { toAOSProps } from "react-gsap-aos";
-
 import { animations } from "react-gsap-aos/constants";
+
+import useDynamicOptions from "./useDynamicOptions";
 
 const contents: React.ReactNode[] = [
   <p key={0}>
@@ -220,6 +223,22 @@ const contents: React.ReactNode[] = [
 ];
 
 export default function Typography() {
+  const options = useDynamicOptions();
+
+  function renderContent(item: React.ReactNode, index: number) {
+    return (
+      <div
+        key={index}
+        {...toAOSProps({
+          ...options,
+          animation: animations[index % length],
+        })}
+      >
+        {item}
+      </div>
+    );
+  }
+
   return (
     <section>
       <article className="prose dark:prose-invert mx-auto overflow-hidden pb-24">
@@ -230,11 +249,3 @@ export default function Typography() {
 }
 
 const length = animations.length;
-
-function renderContent(item: React.ReactNode, index: number) {
-  return (
-    <div key={index} {...toAOSProps({ animation: animations[index % length] })}>
-      {item}
-    </div>
-  );
-}

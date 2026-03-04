@@ -1,11 +1,18 @@
-import { atom } from "jotai";
-import type { Easing, Animation, AnchorPlacement } from "react-gsap-aos";
+import { createStore } from "jotai";
+import { atomWithReset } from "jotai/utils";
+import type { Animation, AnimationOptions } from "react-gsap-aos";
 
-export const animationAtom = atom<Animation>("fade");
-export const easingAtom = atom<Easing>("none");
-export const offsetAtom = atom<number>(120);
-export const durationAtom = atom<number>(400);
-export const delayAtom = atom<number>(0);
-export const onceAtom = atom<boolean>(false);
-export const mirrorAtom = atom<boolean>(false);
-export const anchorPlacementAtom = atom<AnchorPlacement>("top-bottom");
+export const animationAtom = atomWithReset<Animation>("fade");
+export const easingAtom = atomWithReset<AnimationOptions["easing"]>("none");
+export const offsetAtom = atomWithReset<AnimationOptions["offset"]>(120);
+export const durationAtom = atomWithReset<AnimationOptions["duration"]>(400);
+export const delayAtom = atomWithReset<AnimationOptions["delay"]>(0);
+export const onceAtom = atomWithReset<AnimationOptions["once"]>(false);
+export const mirrorAtom = atomWithReset<AnimationOptions["mirror"]>(false);
+export const anchorPlacementAtom =
+  atomWithReset<AnimationOptions["anchorPlacement"]>("top-bottom");
+
+/** 是否顯示錨點標記 */
+export const visibleAnchorAtom = atomWithReset<boolean>(false);
+
+export const commonStore = createStore();
