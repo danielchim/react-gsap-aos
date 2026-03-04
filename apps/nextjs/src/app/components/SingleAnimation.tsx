@@ -1,3 +1,5 @@
+"use client";
+
 import { useAtomValue } from "jotai";
 import { toAOSProps } from "react-gsap-aos";
 

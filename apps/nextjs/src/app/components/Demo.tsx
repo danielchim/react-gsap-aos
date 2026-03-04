@@ -1,86 +1,19 @@
-"use client";
-
-import { useState } from "react";
-import { useAOSInitial } from "react-gsap-aos";
-import { Provider } from "jotai";
-
-import cn from "@/utils/cn";
+import { AOSProvider } from "react-gsap-aos/client";
 
 import GithubButton from "@/components/GithubButton";
 import FAB from "./FAB";
-import AllAnimations from "./AllAnimations";
-import SingleAnimation from "./SingleAnimation";
-import Typography from "./Typography";
-
-interface Tab {
-  value: string;
-  label: string;
-}
-
-const tabs: Tab[] = [
-  {
-    value: "all",
-    label: "所有動畫",
-  },
-  {
-    value: "single",
-    label: "單一動畫",
-  },
-  { value: "typography", label: "文本測試" },
-];
+import Tabs from "./Tabs";
+import Panel from "./Panel";
 
 export default function Demo() {
-  const { containerRef } = useAOSInitial<HTMLDivElement>();
-  const [tabIndex, setTabIndex] = useState(0);
-
   return (
-    <div ref={containerRef} className="relative flex flex-col pb-4 *:px-4">
+    <AOSProvider className="relative flex flex-col pb-4 *:px-4">
       <div className="sticky top-0 z-10 flex items-center gap-2 p-4 backdrop-blur-md">
-        <div role="tablist" className="tabs tabs-box grow">
-          {tabs.map((item, index) => (
-            <button
-              key={item.value}
-              role="tab"
-              type="button"
-              onClick={() => {
-                setTabIndex(index);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className={cn("tab", { "tab-active": tabIndex === index })}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
+        <Tabs />
         <GithubButton />
       </div>
-      {renderPanel(tabIndex)}
+      <Panel />
       <FAB />
-    </div>
+    </AOSProvider>
   );
-}
-
-function renderPanel(index: number) {
-  switch (index) {
-    case 0:
-      return (
-        <Provider>
-          <AllAnimations />
-        </Provider>
-      );
-    case 1:
-      return (
-        <Provider>
-          <SingleAnimation />
-        </Provider>
-      );
-    case 2:
-      return (
-        <Provider>
-          <Typography />
-        </Provider>
-      );
-    default:
-      break;
-  }
 }

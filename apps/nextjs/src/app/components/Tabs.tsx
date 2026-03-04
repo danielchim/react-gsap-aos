@@ -1,0 +1,46 @@
+"use client";
+
+import { useAtom } from "jotai";
+
+import { tabIndexAtom } from "@/jotai/demo";
+import cn from "@/utils/cn";
+
+interface Tab {
+  value: string;
+  label: string;
+}
+
+const tabs: Tab[] = [
+  {
+    value: "all",
+    label: "所有動畫",
+  },
+  {
+    value: "single",
+    label: "單一動畫",
+  },
+  { value: "typography", label: "文本測試" },
+];
+
+export default function Tabs() {
+  const [tabIndex, setTabIndex] = useAtom(tabIndexAtom);
+
+  return (
+    <div role="tablist" className="tabs tabs-box grow">
+      {tabs.map((item, index) => (
+        <button
+          key={item.value}
+          role="tab"
+          type="button"
+          onClick={() => {
+            setTabIndex(index);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className={cn("tab", { "tab-active": tabIndex === index })}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  );
+}
