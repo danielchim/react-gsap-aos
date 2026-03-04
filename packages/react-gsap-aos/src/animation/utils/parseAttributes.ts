@@ -28,7 +28,7 @@ export default function parseAttributes<E extends Element>(element: E) {
         case "delay":
         case "duration": {
           const numberValue = parseNumber(value);
-          if (!Number.isNaN(numberValue) && !Number.isFinite(numberValue)) {
+          if (!Number.isNaN(numberValue) && Number.isFinite(numberValue)) {
             options[prop] = numberValue;
           }
           break;
